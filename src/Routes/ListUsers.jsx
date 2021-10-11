@@ -1,4 +1,4 @@
-import React, {useS, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 function ListUsers() {
 
