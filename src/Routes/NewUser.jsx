@@ -40,7 +40,7 @@ class NewUser extends Component{
             password:this.state.password
         }
 
-        axios.post('https://bakend-proyecto-cartelera.herokuapp.com/api/users/new', registered)
+        axios.post('https://bakend-proyecto-cartelera.herokuapp.com/users/new', registered)
         .then(response => console.log(response.data))
 
         this.setState({
@@ -53,7 +53,7 @@ class NewUser extends Component{
     render(){
         return (
             <div className="container">
-                <h1>Nuevo usuario</h1>
+                <h2>Nuevo usuario</h2>
                 <div className="form-group">
                     <form onSubmit={this.onSubmit}>
                         <input type="text" 

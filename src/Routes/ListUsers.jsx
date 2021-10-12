@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 
 function ListUsers() {
 
-    const data = 'https://bakend-proyecto-cartelera.herokuapp.com/api/users';
+    const data = 'https://bakend-proyecto-cartelera.herokuapp.com/users';
     const [usuarios, setTodos] = useState()
     const consumeApiUsers = async() => {
         const response = await fetch(data)
@@ -19,7 +19,13 @@ function ListUsers() {
             <h1>Lista de Usuarios</h1>
             { !usuarios ? 'Cargando...' : 
                 usuarios.map((usuario, index) =>{
-                    return <h3>{usuario.name} - {usuario.email} </h3>
+                    return (
+                        <div>
+                            <h3>{usuario.name}</h3>
+                            <p>{usuario.email}</p>
+                        </div>
+                    )
+
                 }) }
         </div>
     )
