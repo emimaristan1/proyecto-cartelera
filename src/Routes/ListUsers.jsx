@@ -1,32 +1,36 @@
+import axios from 'axios';
 import React, {useEffect, useState} from 'react'
 
-function ListUsers() {
+const data = 'https://bakend-proyecto-cartelera.herokuapp.com/users';
 
-    const data = 'https://bakend-proyecto-cartelera.herokuapp.com/users';
-    const [usuarios, setTodos] = useState()
+function ListUsers() {
+    const [usuarios, setTodos] = useState([])
+    
     const consumeApiUsers = async() => {
-        const response = await fetch(data)
-        const responseJson = await response.json()
-        setTodos(responseJson)
+       await axios.get(data)
+       .then(res=>{
+            setTodos(res.data)
+       })
     }
 
     useEffect(() => {
-        consumeApiUsers()
+        async function fetchData(){
+            await consumeApiUsers()
+        }
+        fetchData()
     }, [])
 
     return (
         <div>
             <h1>Lista de Usuarios</h1>
             { !usuarios ? 'Cargando...' : 
-                usuarios.map((usuario, index) =>{
-                    return (
-                        <div>
-                            <h3>{usuario.name}</h3>
-                            <p>{usuario.email}</p>
-                        </div>
-                    )
-
-                }) }
+                usuarios.map((usuario, key) =>(
+                    <div key={key.toString()}>
+                        <h3>{usuario.name}</h3>
+                        <p>{usuario.email}</p>
+                    </div>
+                ))
+            }
         </div>
     )
 }

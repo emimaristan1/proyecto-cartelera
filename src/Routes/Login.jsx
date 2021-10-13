@@ -1,32 +1,56 @@
-import React, { Component } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import PropTypes from 'prop-types'
+import axios from 'axios'
+import { Component } from "react";
+import { setTokenSourceMapRange } from 'typescript';
 
-export class Login extends Component {
-    static propTypes = {
+class Login extends Component{
+    state = {}
 
+    handleSubmit = e => {
+        e.preventDefault();
+        
+        const data = {
+            email: this.email,
+            password: this.password
+        }
+
+        axios.post('/users/login', data)
+        .then(res => {
+            /* console.log(res); */
+            localStorage.setItem('token', res.data.token)
+            this.setState({
+                loggedIn: setTokenSourceMapRange
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
-    render() {
+    render(){
+        if(this.data.loggedIn){
+            return <Redirect to={'/'} />
+        }
         return (
             <div className="container">
                 <h2>Login</h2>
                 <div className="form-group">
-                    <form>
+                    <form onSubmit={this.handleSubmit}>
                         <input type="text" 
-                        placeholder="Email"
-                        name="email" 
-                        className="form-control form-group"
+                            placeholder="Email"
+                            onChange={e => this.email = e.target.value}  
+                            name="email" 
+                            className="form-control form-group"
                         />
                         <input type="password" 
-                        name="password" 
-                        placeholder="Password"
-                        className="form-control form-group"
+                            name="password" 
+                            placeholder="Password"
+                            onChange={e => this.password = e.target.value} 
+                            className="form-control form-group"
                         />
-                        <input type="submit" 
-                        value="Login" 
-                        className="btn btn-success btn-block"
-                        />
+                        <button className="btn btn-primary btn-block">
+                            Login
+                        </button>
                     </form>
                 </div>
             </div>
@@ -35,3 +59,4 @@ export class Login extends Component {
 }
 
 export default Login
+

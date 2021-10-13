@@ -2,22 +2,22 @@ import React, { Component } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios'
 
-class NewUser extends Component{
+export class NewUser extends Component{
     constructor(){
         super()
         this.state = {
-            username:'',
+            name:'',
             email:'',
             password:''
         }
-        this.changeUserName = this.changeUserName.bind(this)
+        this.changeName = this.changeName.bind(this)
         this.changeEmail = this.changeEmail.bind(this)
         this.changePassword = this.changePassword.bind(this)
     }
 
-    changeUserName(event){
+    changeName(event){
         this.setState({
-            username:event.target.value
+            name:event.target.value
         })
     }
     changeEmail(event){
@@ -35,16 +35,16 @@ class NewUser extends Component{
         event.preventDefault()
 
         const registered = {
-            name:this.state.username,
+            name:this.state.name,
             email:this.state.email,
             password:this.state.password
         }
 
-        axios.post('https://bakend-proyecto-cartelera.herokuapp.com/users/new', registered)
+        axios.post('/users/new', registered)
         .then(response => console.log(response.data))
 
         this.setState({
-            username:'',
+            name:'',
             email:'',
             password:''
         })
@@ -58,8 +58,8 @@ class NewUser extends Component{
                     <form onSubmit={this.onSubmit}>
                         <input type="text" 
                         placeholder="Nombre"
-                        onChange={this.changeUserName} 
-                        value={this.state.username} 
+                        onChange={this.changeName} 
+                        value={this.state.name} 
                         className="form-control form-group"  
                         />
                         <input type="text" 
