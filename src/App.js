@@ -21,14 +21,18 @@ class App extends Component {
     axios.get('/users/me', config)
     .then(
         res => {
-            this.setState({
-                user: res.data
-            });
+            this.setUser(res.data);
         },
         err => {
             console.log(err);
         }
     )       
+  }
+
+  setUser = user =>{
+    this.setState({
+      user: user
+    })
   }
 
   render(){
@@ -37,14 +41,14 @@ class App extends Component {
       <Router>
         <div className="container mt-5">
           
-        <Navbar user={this.state.user}/>
+        <Navbar user={this.state.user} setUser={this.setUser}/>
           
           <hr />
 
           <Switch>
             <Route exact path="/users/"><ListUsers /></Route>
             <Route exact path="/users/newUser"><NewUser /></Route>
-            <Route exact path="/users/login" component={() => <Login />} />
+            <Route exact path="/users/login" component={() => <Login setUser={this.setUser}/>} />
             <Route exact path="/">
               <h1>Inicio</h1>
               <p>

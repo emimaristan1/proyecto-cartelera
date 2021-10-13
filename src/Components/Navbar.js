@@ -4,13 +4,21 @@ import {Link} from "react-router-dom";
 
 
 export default class Navbar extends Component {
+
+    handleLogout = () => {
+        localStorage.clear();
+        this.props.setUser(null);
+
+    };
+
     render() {
         let buttons;
 
         if(this.props.user){
             buttons=(
                 <ButtonGroup className="me-2" aria-label="Third  group">
-                    <Link to={"/"} className="btn btn-primary btn-block" onClick={() => localStorage.clear()}>Logout</Link>
+                    <Link to={"/"} className="btn btn-primary btn-block" onClick={this.handleLogout}>Logout</Link>
+                    <Link to={"/users/perfil"} className="btn btn-primary btn-block" >{this.props.user.name}</Link>
                 </ButtonGroup>
             )
             

@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios'
 import { Component } from "react";
-import { setTokenSourceMapRange } from 'typescript';
+import { Redirect } from 'react-router';
 
 class Login extends Component{
     state = {}
@@ -19,8 +19,9 @@ class Login extends Component{
             /* console.log(res); */
             localStorage.setItem('token', res.data.token)
             this.setState({
-                loggedIn: setTokenSourceMapRange
+                loggedIn: true
             })
+            this.props.setUser(res.data.user)
         })
         .catch(err => {
             console.log(err);
@@ -28,7 +29,7 @@ class Login extends Component{
     }
 
     render(){
-        if(this.data.loggedIn){
+        if(this.state.loggedIn){
             return <Redirect to={'/'} />
         }
         return (
