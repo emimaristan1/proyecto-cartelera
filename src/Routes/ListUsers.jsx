@@ -1,13 +1,11 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react'
 
-const data = 'https://bakend-proyecto-cartelera.herokuapp.com/users';
-
 function ListUsers() {
     const [usuarios, setTodos] = useState([])
     
     const consumeApiUsers = async() => {
-       await axios.get(data)
+       await axios.get('/users')
        .then(res=>{
             setTodos(res.data)
        })

@@ -2,12 +2,12 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import NewUser from './Routes/NewUser';
 import ListUsers from './Routes/ListUsers';
 import Login from './Routes/Login';
-import Navbar from './Components/Navbar';
+import Navbar from './Components/Navbar2';
 import Perfil from './Routes/Perfil'
 import axios from 'axios';
 import { Component } from "react";
 
-// https://bakend-proyecto-cartelera.herokuapp.com/users
+// https://bakend-proyecto-cartelera.herokuapp.com/
 class App extends Component {
   state = {}
 
@@ -46,7 +46,7 @@ class App extends Component {
           <hr />
 
           <Switch>
-            <Route exact path="/users/"><ListUsers /></Route>
+            {/* <Route exact path="/users/"><ListUsers /></Route> */}
             <Route exact path="/users/newUser"><NewUser /></Route>
             <Route exact path="/users/login" component={() => <Login setUser={this.setUser}/>} />
             <Route exact path="/">
