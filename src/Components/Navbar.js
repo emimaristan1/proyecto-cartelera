@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import {ButtonToolbar, ButtonGroup} from 'react-bootstrap';
+import {Navbar, Nav, Container, NavDropdown} from 'react-bootstrap';
 import {Link} from "react-router-dom";
 
 
-export default class Navbar extends Component {
-
+export class NavbarN extends Component {
     handleLogout = () => {
         localStorage.clear();
         this.props.setUser(null);
@@ -15,33 +14,43 @@ export default class Navbar extends Component {
         let buttons;
 
         if(this.props.user){
-            buttons=(
-                <ButtonGroup className="d-flex" aria-label="Third  group">
-                    <Link to={"/users/perfil"} className="btn btn-primary btn-block" >{this.props.user.name}</Link>
-                    <Link to="/users" className="btn btn-primary btn-block">Listar usuarios</Link>
-                    <Link to={"/"} className="btn btn-danger btn-block" onClick={this.handleLogout}>Logout</Link>
-                </ButtonGroup>
-            )
-            
-        }else{
             buttons = (
-                <ButtonGroup className="d-flex" aria-label="Third  group">
-                    <Link to="/users/newUser" className="btn btn-success ml-auto">Nuevo usuario</Link>
-                    <Link to="/users/login" className="btn btn-primary ml-auto">Login</Link>
-                </ButtonGroup>
+                <Nav>
+                    <NavDropdown title={this.props.user.name} id="basic-nav-dropdown">
+                        <NavDropdown.Item href="/users/perfil">Mi perfil</NavDropdown.Item>
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item href="/" onClick={this.handleLogout}>Logout</NavDropdown.Item>
+                    </NavDropdown>
+                </Nav>
+            )
+        }else{
+            buttons=(
+                <Nav>
+                    <Nav.Link href="/users/newUser" >Nuevo Usuario</Nav.Link>
+                    <Nav.Link href="/users/login">Login</Nav.Link>
+                </Nav>
             )
         }
 
-        return(
-            <nav>
-                <h1>Proyecto Cartelera</h1>
-                <ButtonToolbar aria-label="Toolbar with button groups">
-                    <ButtonGroup className="d-flex" aria-label="First group">
-                        <Link to="/" className="btn btn-primary btn-block">Inicio</Link>
-                    </ButtonGroup>
-                    {buttons}
-                </ButtonToolbar>
-            </nav>
+        return (
+                <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                    <Container>
+                        <Navbar.Brand href="/">Proyecto Cartelera</Navbar.Brand>
+                        <Navbar.Toggle aria-controls="navbarScroll" />
+                        <Navbar.Collapse id="navbarScroll">
+                            <Nav className="me-auto"
+                                style={{ maxHeight: '200px'}}
+                                navbarScroll
+                            >
+                                <Nav.Link href="/">Inicio</Nav.Link>
+                                {/* <Nav.Link href="/users/">Listar Usuarios</Nav.Link> */}
+                            </Nav>
+                            {buttons}
+                        </Navbar.Collapse>
+                    </Container>
+                </Navbar>
         )
     }
 }
+
+export default NavbarN

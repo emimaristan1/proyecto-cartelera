@@ -2,7 +2,7 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import NewUser from './Routes/NewUser';
 import ListUsers from './Routes/ListUsers';
 import Login from './Routes/Login';
-import Navbar from './Components/Navbar2';
+import NavbarN from './Components/Navbar';
 import Perfil from './Routes/Perfil'
 import axios from 'axios';
 import { Component } from "react";
@@ -41,7 +41,7 @@ class App extends Component {
       <Router>
         <div className="container mt-5">
           
-        <Navbar user={this.state.user} setUser={this.setUser}/>
+        <NavbarN user={this.state.user} setUser={this.setUser}/>
           
           <hr />
 
