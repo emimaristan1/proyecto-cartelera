@@ -16,17 +16,18 @@ export default class Navbar extends Component {
 
         if(this.props.user){
             buttons=(
-                <ButtonGroup className="me-2" aria-label="Third  group">
-                    <Link to={"/"} className="btn btn-primary btn-block" onClick={this.handleLogout}>Logout</Link>
+                <ButtonGroup className="d-flex" aria-label="Third  group">
                     <Link to={"/users/perfil"} className="btn btn-primary btn-block" >{this.props.user.name}</Link>
+                    <Link to="/users" className="btn btn-primary btn-block">Listar usuarios</Link>
+                    <Link to={"/"} className="btn btn-danger btn-block" onClick={this.handleLogout}>Logout</Link>
                 </ButtonGroup>
             )
             
         }else{
             buttons = (
-                <ButtonGroup className="me-2" aria-label="Third  group">
-                    <Link to="/users/newUser" className="btn btn-dark btn-block">Nuevo usuario</Link>
-                    <Link to="/users/login" className="btn btn-primary btn-block">Login</Link>
+                <ButtonGroup className="d-flex" aria-label="Third  group">
+                    <Link to="/users/newUser" className="btn btn-success ml-auto">Nuevo usuario</Link>
+                    <Link to="/users/login" className="btn btn-primary ml-auto">Login</Link>
                 </ButtonGroup>
             )
         }
@@ -35,11 +36,8 @@ export default class Navbar extends Component {
             <nav>
                 <h1>Proyecto Cartelera</h1>
                 <ButtonToolbar aria-label="Toolbar with button groups">
-                    <ButtonGroup className="me-2" aria-label="First group">
+                    <ButtonGroup className="d-flex" aria-label="First group">
                         <Link to="/" className="btn btn-primary btn-block">Inicio</Link>
-                    </ButtonGroup>
-                    <ButtonGroup className="me-2" aria-label="Second group">
-                        <Link to="/users" className="btn btn-danger btn-block">Listar usuarios</Link>
                     </ButtonGroup>
                     {buttons}
                 </ButtonToolbar>

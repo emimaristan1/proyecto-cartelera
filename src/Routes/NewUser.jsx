@@ -62,7 +62,7 @@ export class NewUser extends Component{
                         value={this.state.name} 
                         className="form-control form-group"  
                         />
-                        <input type="text" 
+                        <input type="email" 
                         placeholder="Email"
                         onChange={this.changeEmail} 
                         value={this.state.email} 
