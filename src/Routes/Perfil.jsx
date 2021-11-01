@@ -43,6 +43,9 @@ class Perfil extends Component {
         let info;
         if(this.props.user){
             info = (
+                <div>
+                    <h1>{this.props.user.name}</h1>
+                    <p>{this.props.user.email}</p>
                     <div className="form-group">
                         <form onSubmit={this.onSubmit}>
                             <input type="text" 
@@ -63,6 +66,7 @@ class Perfil extends Component {
                             />
                         </form>
                     </div>
+                </div>
             )
         }else{
             info = (
@@ -71,9 +75,7 @@ class Perfil extends Component {
         }
         
         return (
-            <div>
-                <h1>{this.props.user.name}</h1>
-                <p>{this.props.user.email}</p>
+            <div>{info}
             </div>
         )
         

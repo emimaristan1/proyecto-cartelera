@@ -1,8 +1,8 @@
 import axios from 'axios';
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 
 //const data = 'https://bakend-proyecto-cartelera.herokuapp.com/users';
-const data = 'users';
+//const data = 'users';
 
 function ListUsers() {
     const [usuarios, setTodos] = useState([])
