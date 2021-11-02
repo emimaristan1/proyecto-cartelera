@@ -3,6 +3,9 @@ import NewUser from './Routes/NewUser';
 import Login from './Routes/Login';
 import NavbarN from './Components/Navbar';
 import Perfil from './Routes/Perfil'
+import Inicio from './Routes/Inicio'
+import ListBilboard from './Routes/ListBilboard'
+import NewBilboard from './Routes/NewBilboard'
 import axios from 'axios';
 import { Component } from "react";
 
@@ -49,14 +52,10 @@ class App extends Component {
             {/* <Route exact path="/users/"><ListUsers /></Route> */}
             <Route exact path="/users/newUser"><NewUser /></Route>
             <Route exact path="/users/login" component={() => <Login setUser={this.setUser}/>} />
-            <Route exact path="/">
-              <h1>Inicio</h1>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed iaculis ex. Cras consequat aliquam metus, id pellentesque arcu scelerisque quis. Vestibulum placerat, quam eget elementum convallis, nisi risus tempus urna, eu pharetra lorem risus id lectus. Nunc cursus porta risus, non rhoncus felis consequat sed. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In elementum ultricies viverra. Maecenas ultrices turpis vitae pellentesque dignissim. Maecenas finibus mollis tellus in consectetur. Maecenas sed scelerisque arcu. Vivamus at mauris nec massa iaculis finibus. Vestibulum ex sapien, aliquam id ligula a, suscipit vestibulum risus. 
-                Donec est dui, varius id cursus luctus, aliquet et orci. Pellentesque sollicitudin eu odio id placerat. Proin pellentesque tincidunt leo nec tincidunt. Aliquam ullamcorper imperdiet elit eget dictum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam at viverra nisl, at ullamcorper justo. Nam hendrerit massa in maximus ultrices. Praesent non metus nec nisl convallis luctus at a magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent commodo eleifend neque, sit amet laoreet nisi tempor sed. Maecenas eget sem dictum lorem aliquet vehicula.
-              </p>
-            </Route>
             <Route exact path="/users/perfil" component={() => <Perfil user={this.state.user}/>}/>
+            <Route exact path="/" component={() => <Inicio user={this.state.user}/>}/>
+            <Route exact path="/bilboard/new"  component={() => <NewBilboard user={this.state.user}/>}/>
+            <Route exact path="/bilboard/list"><ListBilboard /></Route>
           </Switch>
         </div>
       </Router>

@@ -15,6 +15,11 @@ export class NavbarN extends Component {
         if(this.props.user){
             buttons = (
                 <Nav>
+                    <NavDropdown title='Carteleras' id="basic-nav-dropdown">
+                        <NavDropdown.Item href="/bilboard/new">Crear cartelera</NavDropdown.Item>
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item href="/bilboard/list">Mis carteleras</NavDropdown.Item>
+                    </NavDropdown>
                     <NavDropdown title={this.props.user.name} id="basic-nav-dropdown">
                         <NavDropdown.Item href="/users/perfil">Mi perfil</NavDropdown.Item>
                         <NavDropdown.Divider />

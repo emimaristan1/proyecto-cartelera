@@ -37,7 +37,7 @@ class Login extends Component{
                 <h2>Login</h2>
                 <div className="form-group">
                     <form onSubmit={this.handleSubmit}>
-                        <input type="text" 
+                        <input type="email" 
                             placeholder="Email"
                             onChange={e => this.email = e.target.value}  
                             name="email" 

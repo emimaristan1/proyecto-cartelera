@@ -6,10 +6,9 @@ class Perfil extends Component {
     constructor(props){
         super(props)
         this.state = {
-            name:this.props.user.name,
-            email:this.props.user.email
+            name:'',
+            email:''
         }
-        
         this.changeName = this.changeName.bind(this)
         this.changeEmail = this.changeEmail.bind(this)
     }
@@ -44,20 +43,16 @@ class Perfil extends Component {
         if(this.props.user){
             info = (
                 <div>
-                    <h1>{this.props.user.name}</h1>
-                    <p>{this.props.user.email}</p>
                     <div className="form-group">
                         <form onSubmit={this.onSubmit}>
                             <input type="text" 
-                            placeholder="Nombre"
+                            placeholder={this.props.user.name} 
                             onChange={this.changeName} 
-                            value={this.state.name} 
                             className="form-control form-group"  
                             />
                             <input type="email" 
-                            placeholder="Email"
+                            placeholder={this.props.user.email} 
                             onChange={this.changeEmail} 
-                            value={this.state.email} 
                             className="form-control form-group"  
                             />
                             <input type="submit"

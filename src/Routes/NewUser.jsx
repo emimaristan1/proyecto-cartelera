@@ -69,14 +69,14 @@ export class NewUser extends Component{
                         className="form-control form-group"  
                         />
                         <input type="password" 
-                        placeholder="password"
+                        placeholder="Password"
                         onChange={this.changePassword} 
                         value={this.state.password} 
                         className="form-control form-group"  
                         />
                         <input type="submit"
-                        className="btn btn-danger btn-block"
-                        value='submit'
+                        className="btn btn-success btn-block"
+                        value='Registrarme'
                         />
                     </form>
                 </div>
