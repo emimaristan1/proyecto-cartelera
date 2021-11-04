@@ -33,7 +33,7 @@ export class NewBilboard extends Component{
             description:this.state.description
         }
 
-        axios.post('/bilboard/new', created)
+        axios.post('/bilboards/new', created)
         .then(response => alert(response.data))
 
         this.setState({
