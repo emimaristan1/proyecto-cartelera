@@ -1,6 +1,6 @@
 import { Component } from 'react'
-import {Navbar, Nav, Container, NavDropdown} from 'react-bootstrap';
-
+import {Navbar, Nav, Container, NavDropdown, InputGroup, FormControl, Button} from 'react-bootstrap';
+import axios from 'axios';
 
 export class NavbarN extends Component {
     handleLogout = () => {
@@ -8,6 +8,30 @@ export class NavbarN extends Component {
         this.props.setUser(null);
 
     };
+
+    /*changeSearch(event){
+        this.setState({
+            filter: event.target.value
+        })
+    }
+
+     showResults(arg){
+        var value = arg.target.value
+
+        axios.get('/search/users?q=' + value, function(data){
+            console.log("hola");
+        }).then(function(data){
+            console.log(value);
+            console.log(data)
+        }, 200);
+
+        axios.get('/search/bilboards?q=' + value, function(data){
+            console.log("hola");
+        }).then(function(data){
+            console.log(value);
+            console.log(data)
+        }, 200);
+    } */
 
     render() {
         let buttons;
