@@ -8,6 +8,7 @@ import ListBilboard from './Routes/ListBilboard'
 import NewBilboard from './Routes/NewBilboard'
 import axios from 'axios';
 import { Component } from "react";
+import EditUser from "./Routes/EditUser";
 
 //https://bakend-proyecto-cartelera.herokuapp.com/
 
@@ -53,9 +54,11 @@ class App extends Component {
             <Route exact path="/users/newUser"><NewUser /></Route>
             <Route exact path="/users/login" component={() => <Login setUser={this.setUser}/>} />
             <Route exact path="/users/perfil" component={() => <Perfil user={this.state.user}/>}/>
+            <Route exact path="/users/edit" component={() => <EditUser user={this.state.user}/>}/>
             <Route exact path="/" component={() => <Inicio user={this.state.user}/>}/>
             <Route exact path="/bilboard/new"  component={() => <NewBilboard user={this.state.user}/>}/>
             <Route exact path="/bilboard/list"><ListBilboard /></Route>
+            
           </Switch>
         </div>
       </Router>

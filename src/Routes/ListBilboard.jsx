@@ -8,7 +8,7 @@ function ListBilboard() {
     const [carteleras, setTodas] = useState([])
     
     const consumeApiBilboards = async() => {
-       await axios.get('/bilboard/list')
+       await axios.get('/bilboards/list')
        .then(res=>{
             setTodas(res.data)
        })

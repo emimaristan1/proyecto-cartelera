@@ -24,7 +24,9 @@ class Login extends Component{
             this.props.setUser(res.data.user)
         })
         .catch(err => {
-            console.log(err);
+            //console.log(err);
+            alert(err.request.response)
+      
         })
     }
 

@@ -1,6 +1,5 @@
 import { Component } from 'react'
-import {Navbar, Nav, Container, NavDropdown, InputGroup, FormControl, Button} from 'react-bootstrap';
-import axios from 'axios';
+import {Navbar, Nav, Container, NavDropdown} from 'react-bootstrap';
 
 export class NavbarN extends Component {
     handleLogout = () => {
