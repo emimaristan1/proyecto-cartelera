@@ -27,7 +27,10 @@ function ListBilboard() {
             { !carteleras ? 'Cargando...' : 
                 carteleras.map((cartelera, key) =>(
                     <div key={key.toString()} className="alert alert-info">
-                        <h4 className="alert-heading fs-3" onClick>{cartelera.projectName}</h4>
+                        <a href={"/bilboard/" + cartelera._id}>
+                        {/* <a href={"/bilboard/" + encodeURI(cartelera.projectName)}> */}
+                            <h4 className="alert-heading fs-3">{cartelera.projectName}</h4>
+                        </a>
                         <p className="alert-heading fs-5">{cartelera.description}</p>
                         <p className="mb-0 fs-6 bold fw-bold">{cartelera.adminEmail}</p>
                     </div>
