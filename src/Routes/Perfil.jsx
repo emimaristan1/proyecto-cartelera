@@ -1,29 +1,24 @@
 import { Component } from 'react'
-import { Redirect } from 'react-router';
 import { Button } from 'react-bootstrap';
 
 class Perfil extends Component {
-    state = {}
-
-    render() {    
-        let info;
-        if(this.props.user){
-            info = (
-                <>
-                    <h3>hi {this.props.user.name}</h3>
-                    <p>{this.props.user.email}</p>
-                    <Button variant="primary" href="/users/edit">Editar perfil</Button>
-                </>
-            )
-        }else{
-            setTimeout(() => {}, 1000);
-            return <Redirect to={'/'} />
+    constructor(props){
+        super(props)
+        this.state={
+            user:this.props.user
         }
+    }
 
-        
+    render() {
         return (
             <>
-                {info}
+                {!this.state.user ? 'Cargando...' : 
+                    <>
+                        <h3>hi {this.state.user.name}</h3>
+                        <p>{this.state.user.email}</p>
+                        <Button variant="primary" href="/users/edit">Editar perfil</Button>
+                    </>
+                }
             </>
         )
         

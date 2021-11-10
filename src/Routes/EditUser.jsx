@@ -4,13 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Redirect } from 'react-router';
 
 class EditUser extends Component {
-    state = {}
-
-    constructor(props){
+    constructor(props){ 
         super(props)
         this.state = {
-            name:'',
-            email:''
+            name:this.props.user.name,
+            email:this.props.user.email
         }
         this.changeName = this.changeName.bind(this)
         this.changeEmail = this.changeEmail.bind(this)
@@ -57,25 +55,25 @@ class EditUser extends Component {
     };
 
     render() {
+        
         if(this.state.modifyIn===true){
             setTimeout(() => {  
                 window.location.reload(false);
             }, 1000);
-                return <Redirect to={'/users/perfil'} />
+            return <Redirect to={'/users/perfil'} />
         }
 
-        let info;
-        if(this.props.user){
-            info = (
+        return (
+            <div> 
                 <div className="form-group">
                     <form onSubmit={this.handleSubmit}>
                         <input type="text" 
-                        defaultValue={this.props.user.name}
+                        defaultValue={this.state.name}
                         onChange={this.changeName} 
                         className="form-control form-group"  
                         />
                         <input type="email" 
-                        defaultValue={this.props.user.email} 
+                        defaultValue={this.state.email} 
                         onChange={this.changeEmail} 
                         className="form-control form-group"  
                         />
@@ -85,11 +83,6 @@ class EditUser extends Component {
                         />
                     </form>
                 </div>
-            )
-        }
-        return (
-            <div>
-                {info}
             </div>
         );
     }
