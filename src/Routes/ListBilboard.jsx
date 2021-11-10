@@ -19,7 +19,7 @@ function ListBilboard() {
             await consumeApiBilboards()
         }
         fetchData()
-    }, [])
+    }, [carteleras])
 
     return (
         <div>
