@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Form } from 'react-bootstrap';
 import axios from 'axios'
 
 export class NewBilboard extends Component{
@@ -29,11 +30,12 @@ export class NewBilboard extends Component{
 
         const created = {
             projectName:this.state.projectName,
-            adminEmail:this.props.user.email,
+            adminId:this.props.user._id,
+            adminEmail: this.props.user.email,
             description:this.state.description
         }
 
-        axios.post('/bilboard/new', created)
+        axios.post('/bilboards/new', created)
         .then(response => alert(response.data))
 
         this.setState({
@@ -54,11 +56,19 @@ export class NewBilboard extends Component{
                         value={this.state.projectName} 
                         className="form-control form-group"  
                         />
-                        <input type="text" 
+                        {/* <input type="textarea" 
                         placeholder="Descripción"
                         onChange={this.changeDescription} 
                         value={this.state.description} 
                         className="form-control form-group"  
+                        /> */}
+                        <Form.Control 
+                        as="textarea" 
+                        rows={3} 
+                        placeholder="Descripción"
+                        value={this.state.description} 
+                        onChange={this.changeDescription} 
+                        className="form-control form-group"
                         />
                         <input type="submit"
                         className="btn btn-success btn-block"
