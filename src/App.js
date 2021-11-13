@@ -14,71 +14,66 @@ import Bilboard from "./Routes/Bilboard";
 //https://bakend-proyecto-cartelera.herokuapp.com/
 
 class App extends Component {
-  constructor(props){
-    super(props)
-    this.state={
-      user:'',
-      loggedIn:false
+    constructor(props){
+        super(props)
+        this.state={
+            user:'',
+            loggedIn:false
+        }
     }
 
+    componentDidMount = () => {
+        if(localStorage.getItem("token")){
+        const config = {
+            headers: {
+                "x-access-token": localStorage.getItem("token")
+            }
+        }
 
-  }
-
-  componentDidMount = () => {
-    if(localStorage.getItem("token")){
-      const config = {
-          headers: {
-              "x-access-token": localStorage.getItem("token")
-          }
-      }
-
-      axios.get('/users/me', config)
-      .then(
-          res => {
-              this.setUser(res.data);
-              this.setState({
-                loggedIn: true
-              })
-          },
-          err => {
-              console.log(err);
-          }
-      )       
+        axios.get('/users/me', config)
+        .then(
+            res => {
+                this.setUser(res.data);
+                this.setState({
+                    loggedIn: true
+                })
+            },
+            err => {
+                console.log(err);
+            }
+        )       
+        }
     }
-  }
-  
-  setUser = user =>{
-    this.setState({user: user})
-  }
-  render(){
+    
+    setUser = user =>{
+        this.setState({user: user})
+    }
+    
+    render(){
 
-    return (
-      <Router>
-        <div className="container mt-5">
-          
-        <NavbarN user={this.state.user} setUser={this.setUser}/>
-          
-          <hr />
+        return (
+            <Router>
+                <div className="container mt-5">
+                    <NavbarN user={this.state.user} setUser={this.setUser}/>
+                    <hr />
+                    <Switch>
+                        <Route index exact path="/" component={() => <Inicio user={this.state.user}/>}/>
 
-          <Switch>
-            <Route index exact path="/" component={() => <Inicio user={this.state.user}/>}/>
+                        <Route exact path="/users/newUser" render={() => (!this.state.loggedIn ? (<NewUser />) : (<Inicio />))} />
+                        <Route exact path="/users/login" render={() => (!this.state.loggedIn ? (<Login setUser={this.setUser}/>) : (<Inicio />))} />
+                        <Route exact path="/users/perfil" render={() => (this.state.loggedIn ? (<Perfil user={this.state.user}/>) : (<Inicio />))}/>
+                        <Route exact path="/users/edit" render={() => (this.state.loggedIn ? (<EditUser user={this.state.user}/>) : (<Inicio />))} />
+                        {/* <Route exact path="/users/"><ListUsers /></Route> */}
 
-            <Route exact path="/users/newUser" render={() => (!this.state.loggedIn ? (<NewUser />) : (<Inicio />))} />
-            <Route exact path="/users/login" render={() => (!this.state.loggedIn ? (<Login setUser={this.setUser}/>) : (<Inicio />))} />
-            <Route exact path="/users/perfil" render={() => (this.state.loggedIn ? (<Perfil user={this.state.user}/>) : (<Inicio />))}/>
-            <Route exact path="/users/edit" render={() => (this.state.loggedIn ? (<EditUser user={this.state.user}/>) : (<Inicio />))} />
-            {/* <Route exact path="/users/"><ListUsers /></Route> */}
-
-            <Route exact path="/bilboard/new" render={() => (this.state.loggedIn ? (<NewBilboard user={this.state.user}/>): (<Inicio />))}/>
-            <Route exact path="/bilboard/list" ><ListBilboard/></Route>
-            <Route path="/bilboard/:bilboardId" render={() => (this.state.loggedIn ? (<Bilboard />): (<Inicio />))}/>
-            
-          </Switch>
-        </div>
-      </Router>
-    );
-  }
-  
+                        <Route exact path="/bilboard/new" render={() => (this.state.loggedIn ? (<NewBilboard /* user={this.state.user} *//>): (<Inicio />))}/>
+                        <Route exact path="/bilboard/list" ><ListBilboard/></Route>
+                        <Route path="/bilboard/:bilboardId" render={() => (this.state.loggedIn ? (<Bilboard user={this.state.user}/>): (<Inicio />))}/>
+                        
+                    </Switch>
+                </div>
+            </Router>
+        )
+    }  
 }
 
 export default App;

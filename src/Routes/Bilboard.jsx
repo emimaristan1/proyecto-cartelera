@@ -1,17 +1,27 @@
 import axios from 'axios';
 import React, { Component } from 'react'
-import { Card, ListGroup } from 'react-bootstrap';
+import { Card, ListGroup, Button, Modal, Form } from 'react-bootstrap';
 import { withRouter } from "react-router";
 
 export class Bilboard extends Component {
     constructor(props){
         super(props)
         this.state = {
-            bilboardId : this.props.match.params.bilboardId, //obtiene la id del bilboard de la URL
+            bilboardId:this.props.match.params.bilboardId, //obtiene la id del bilboard de la URL
             bilboard:'',
             members:[],
-            member:''
+            member:'',
+            loggedUser:this.props.user,
+            modalShow:false
         }
+
+        this.showModal = this.showModal.bind(this)
+    }
+
+    showModal(value){
+        this.setState({
+            modalShow: value
+        })
     }
 
     componentDidMount(){    //al cargar los elementos
@@ -30,7 +40,7 @@ export class Bilboard extends Component {
 
             this.setState({bilboard: bilboard})
         });
-
+        
     }
 
     addMember = () =>{  //agrega al array this.state.members el this.state.member cargado
@@ -62,27 +72,55 @@ export class Bilboard extends Component {
                         </blockquote>
                     </Card.Body>                    
                 </Card>
-                {this.state.members.length!==0 ? (
-                    <Card>
-                    <Card.Header as="h5">Miembros</Card.Header>
-                    <ListGroup as="ol">
-                        {
-                            this.state.members.map((member, key) => (
-                                member===this.state.bilboard.authEmail ? 
-                                (<ListGroup.Item as="li" key={key} >{member} 👑</ListGroup.Item>) :
-                                (<ListGroup.Item as="li" key={key} >{member}</ListGroup.Item>)
-                            ))
-                        }
-                    </ListGroup>
-                </Card>
-                ) : ''}
-                
+                {
+                    this.state.members.length!==0 ? (
+                        <Card>
+                            <Card.Header as="h5">Miembros</Card.Header>
+                            {
+                                this.state.loggedUser._id===this.state.bilboard.authId ? (
+                                    <Button onClick={() => this.showModal(true)}>Agregar</Button>
+                                ) : ''
+                            }
+
+                            <ListGroup as="ol">
+                                {
+                                    this.state.members.map((member, key) => (
+                                        member===this.state.bilboard.authEmail ? 
+                                        (<ListGroup.Item as="li" key={key} >{member} 👑</ListGroup.Item>) :
+                                        (<ListGroup.Item as="li" key={key} >{member}</ListGroup.Item>)
+                                    ))
+                                }
+                            </ListGroup>
+                        </Card>
+                    ) : ''
+                }
+
+                <Modal 
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    show={this.state.modalShow} 
+                    centered
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">Enviar Invitación</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <Form.Control type="text" placeholder="Buscar..." />
+                                <ListGroup as="ol">
+                                    {}
+                                </ListGroup>
+                            </Form.Group>
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={() => this.showModal(false)}>Cancelar</Button>
+                    </Modal.Footer>
+                </Modal>
+
             </>
-        ) : (
-            <div>
-                <h1>Loading...</h1>
-            </div>
-        )
+        ) : (<div><h1>Loading...</h1></div>)
     }
 }
 
