@@ -46,9 +46,9 @@ export class NewBilboard extends Component{
     
     render(){
         return (
-            <div className="container">
+            <div className="container d-flex justify-content-center">
+                <div className="form-group w-75 p-3">
                 <h2>Nueva cartelera</h2>
-                <div className="form-group">
                     <form onSubmit={this.onSubmit}>
                         <input type="text" 
                         placeholder="Nombre de la cartelera"

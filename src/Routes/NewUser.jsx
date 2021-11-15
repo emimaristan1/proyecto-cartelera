@@ -52,9 +52,9 @@ export class NewUser extends Component{
     
     render(){
         return (
-            <div className="container">
+            <div className="container d-flex justify-content-center">
+                <div className="form-group w-50 p-3">
                 <h2>Nuevo usuario</h2>
-                <div className="form-group">
                     <form onSubmit={this.onSubmit}>
                         <input type="text" 
                         placeholder="Nombre"

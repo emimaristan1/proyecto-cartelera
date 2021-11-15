@@ -24,9 +24,7 @@ class Login extends Component{
             this.props.setUser(res.data.user)
         })
         .catch(err => {
-            //console.log(err);
             alert(err.request.response)
-      
         })
     }
 
@@ -35,10 +33,10 @@ class Login extends Component{
             return <Redirect to={'/'} />
         }
         return (
-            <div className="container">
-                <h2>Login</h2>
-                <div className="form-group">
-                    <form onSubmit={this.handleSubmit}>
+            <div className="container d-flex justify-content-center" >
+                <div className="form-group w-50 p-3">
+                    <h2>Login</h2>
+                    <form onSubmit={this.handleSubmit} >
                         <input type="email" 
                             placeholder="Email"
                             onChange={e => this.email = e.target.value}  
