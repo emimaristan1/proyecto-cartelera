@@ -1,4 +1,3 @@
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import NewUser from './Routes/NewUser';
 import Login from './Routes/Login';
 import NavbarN from './Components/Navbar';
@@ -6,10 +5,13 @@ import Perfil from './Routes/Perfil'
 import Inicio from './Routes/Inicio'
 import ListBilboard from './Routes/ListBilboard'
 import NewBilboard from './Routes/NewBilboard'
-import axios from 'axios';
-import React, { Component } from "react";
 import EditUser from "./Routes/EditUser";
 import Bilboard from "./Routes/Bilboard";
+import ListUsers from "./Routes/ListUsers"
+
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import axios from 'axios';
+import React, { Component } from "react";
 
 //https://bakend-proyecto-cartelera.herokuapp.com/
 
@@ -63,7 +65,7 @@ class App extends Component {
                         <Route exact path="/users/login" render={() => (!this.state.loggedIn ? (<Login setUser={this.setUser}/>) : (<Inicio />))} />
                         <Route exact path="/users/perfil" render={() => (this.state.loggedIn ? (<Perfil user={this.state.user}/>) : (<Inicio />))}/>
                         <Route exact path="/users/edit" render={() => (this.state.loggedIn ? (<EditUser user={this.state.user}/>) : (<Inicio />))} />
-                        {/* <Route exact path="/users/"><ListUsers /></Route> */}
+                        <Route exact path="/users/list"><ListUsers /></Route>
 
                         <Route exact path="/bilboard/new" render={() => (this.state.loggedIn ? (<NewBilboard /* user={this.state.user} *//>): (<Inicio />))}/>
                         <Route exact path="/bilboard/list" ><ListBilboard/></Route>

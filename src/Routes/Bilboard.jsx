@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { Component } from 'react'
-import { Card, ListGroup, Button, Modal, Form } from 'react-bootstrap';
+import { Card, ListGroup, Button } from 'react-bootstrap';
 import { withRouter } from "react-router";
+import ModalUserFinder from '../Components/ModalUserFinder';
 
 export class Bilboard extends Component {
     constructor(props){
@@ -95,29 +96,11 @@ export class Bilboard extends Component {
                     ) : ''
                 }
 
-                <Modal 
-                    size="lg"
-                    aria-labelledby="contained-modal-title-vcenter"
-                    show={this.state.modalShow} 
-                    centered
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title id="contained-modal-title-vcenter">Enviar Invitación</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Form>
-                            <Form.Group className="mb-3" controlId="formBasicEmail">
-                                <Form.Control type="text" placeholder="Buscar..." />
-                                <ListGroup as="ol">
-                                    {}
-                                </ListGroup>
-                            </Form.Group>
-                        </Form>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={() => this.showModal(false)}>Cancelar</Button>
-                    </Modal.Footer>
-                </Modal>
+                <ModalUserFinder
+                    show={this.state.modalShow}
+                    onHide={() => this.showModal(false)}
+                    members={this.state.members}
+                />
 
             </>
         ) : (<div><h1>Loading...</h1></div>)
