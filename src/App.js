@@ -1,6 +1,6 @@
 import NewUser from './Routes/NewUser';
 import Login from './Routes/Login';
-import NavbarN from './Components/Navbar';
+import Navbar from './Components/Navbar';
 import Perfil from './Routes/Perfil'
 import Inicio from './Routes/Inicio'
 import ListBilboard from './Routes/ListBilboard'
@@ -12,6 +12,7 @@ import ListUsers from "./Routes/ListUsers"
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import axios from 'axios';
 import React, { Component } from "react";
+import ModalInvitation from './Components/ModalInvitation';
 
 //https://bakend-proyecto-cartelera.herokuapp.com/
 
@@ -20,60 +21,87 @@ class App extends Component {
         super(props)
         this.state={
             user:'',
-            loggedIn:false
+            loggedIn:false,
+            invitations: [],
+            modalShow:false
         }
     }
 
-    componentDidMount = () => {
+    componentDidMount() {
         if(localStorage.getItem("token")){
-        const config = {
-            headers: {
-                "x-access-token": localStorage.getItem("token")
+            const config = {
+                headers: {
+                    "x-access-token": localStorage.getItem("token")
+                }
             }
-        }
 
-        axios.get('/users/me', config)
-        .then(
-            res => {
-                this.setUser(res.data);
-                this.setState({
-                    loggedIn: true
-                })
-            },
-            err => {
+            //busca al usuario segun su token
+            axios.get('/users/me', config) 
+            .then(res => {
+                this.setUser(res.data); //setea el estado de usuario
+                this.setState({loggedIn: true}) //setea el estado de loggedIn
+            },err => {
                 console.log(err);
-            }
-        )       
+            })
+            
+            axios.get('/invitation/my', config)
+            .then(res => {
+                /* console.log(res.data.filter(element => element.aprobe)); */
+                this.setInvitation(res.data.filter(element => element.aprobe));
+            },err => {
+                console.log(err);
+            })
         }
     }
-    
+
     setUser = user =>{
         this.setState({user: user})
     }
-    
+
+    setInvitation = inv =>{
+        this.setState({invitations: inv});
+    }
+
+    showModal = value =>{
+        this.setState({modalShow: value})
+    }
+    b
     render(){
 
         return (
-            <Router>
-                <div className="container mt-5">
-                    <NavbarN user={this.state.user} setUser={this.setUser}/>
-                    <hr />
-                    <Switch>
-                        <Route index exact path="/" component={() => <Inicio user={this.state.user}/>}/>
+            <>
+                <Router>
+                    <div className="container mt-5">
+                        <Navbar 
+                            user={this.state.user} 
+                            setUser={this.setUser} 
+                            showModal={this.showModal}
+                            cantInv={this.state.invitations.length}
+                        />
+                        <hr />
+                        <Switch>
+                            <Route index exact path="/" component={() => <Inicio user={this.state.user}/>}/>
 
-                        <Route exact path="/users/newUser" render={() => (!this.state.loggedIn ? (<NewUser />) : (<Inicio />))} />
-                        <Route exact path="/users/login" render={() => (!this.state.loggedIn ? (<Login setUser={this.setUser}/>) : (<Inicio />))} />
-                        <Route exact path="/users/perfil" render={() => (this.state.loggedIn ? (<Perfil user={this.state.user}/>) : (<Inicio />))}/>
-                        <Route exact path="/users/edit" render={() => (this.state.loggedIn ? (<EditUser user={this.state.user}/>) : (<Inicio />))} />
-                        <Route exact path="/users/list"><ListUsers /></Route>
+                            <Route exact path="/users/newUser" render={() => (!this.state.loggedIn ? (<NewUser />) : (<Inicio />))} />
+                            <Route exact path="/users/login" render={() => (!this.state.loggedIn ? (<Login setUser={this.setUser} setInvitation={this.setInvitation}/>) : (<Inicio />))} />
+                            <Route exact path="/users/perfil" render={() => (this.state.loggedIn ? (<Perfil user={this.state.user} />) : (<Inicio />))}/>
+                            <Route exact path="/users/edit" render={() => (this.state.loggedIn ? (<EditUser user={this.state.user}/>) : (<Inicio />))} />
+                            <Route exact path="/users/list"><ListUsers /></Route>
 
-                        <Route exact path="/bilboard/new" render={() => (this.state.loggedIn ? (<NewBilboard /* user={this.state.user} *//>): (<Inicio />))}/>
-                        <Route exact path="/bilboard/list" ><ListBilboard/></Route>
-                        <Route path="/bilboard/:bilboardId" render={() => (this.state.loggedIn ? (<Bilboard user={this.state.user}/>): (<Inicio />))}/>
-                        
-                    </Switch>
-                </div>
-            </Router>
+                            <Route exact path="/bilboard/new" render={() => (this.state.loggedIn ? (<NewBilboard user={this.state.user}/>): (<Inicio />))}/>
+                            <Route exact path="/bilboard/list" ><ListBilboard/></Route>
+                            <Route path="/bilboard/:bilboardId" render={() => (this.state.loggedIn ? (<Bilboard user={this.state.user}/>): (<Inicio />))}/>
+                            
+                        </Switch>
+                    </div>
+                </Router>
+                <ModalInvitation 
+                    show={this.state.modalShow}
+                    onHide={() => this.showModal(false)}
+                    invitations={this.state.invitations}
+                    user={this.state.user}
+                /> 
+            </>
         )
     }  
 }

@@ -6,7 +6,7 @@ import { Redirect } from 'react-router';
 class Login extends Component{
     state = {}
 
-    handleSubmit = e => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         
         const data = {
@@ -14,17 +14,18 @@ class Login extends Component{
             password: this.password
         }
 
-        axios.post('/users/login', data)
-        .then(res => {
-            /* console.log(res); */
-            localStorage.setItem('token', res.data.token)
-            this.setState({
-                loggedIn: true
-            })
-            this.props.setUser(res.data.user)
-        })
-        .catch(err => {
-            alert(err.request.response)
+        const user = await axios.post('/users/login', data);
+        localStorage.setItem('token', user.data.token)
+        this.setState({loggedIn: true})
+        this.props.setUser(user.data.user)
+
+        const config = {headers: {"x-access-token": user.data.token}}
+
+        axios.get('/invitation/my', config).then(res => {
+            console.log(res.data.length);
+            this.props.setInvitation(res.data);
+        },err => {
+            console.log(err);
         })
     }
 

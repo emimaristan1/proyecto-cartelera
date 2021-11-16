@@ -100,6 +100,9 @@ export class Bilboard extends Component {
                     show={this.state.modalShow}
                     onHide={() => this.showModal(false)}
                     members={this.state.members}
+                    bilboardid={this.state.bilboard._id}
+                    bilboardname={this.state.bilboard.projectName}
+                    authId={this.props.user._id}
                 />
 
             </>

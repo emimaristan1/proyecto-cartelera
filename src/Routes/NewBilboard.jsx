@@ -7,6 +7,7 @@ export class NewBilboard extends Component{
     constructor(props){
         super(props)
         this.state = {
+            userLogged: this.props.user,
             projectName:'',
             description:''
         }
@@ -30,8 +31,8 @@ export class NewBilboard extends Component{
 
         const created = {
             projectName:this.state.projectName,
-            adminId:this.props.user._id,
-            adminEmail: this.props.user.email,
+            adminId:this.state.userLogged._id,
+            adminEmail: this.state.userLogged.email,
             description:this.state.description
         }
 
@@ -48,31 +49,25 @@ export class NewBilboard extends Component{
         return (
             <div className="container d-flex justify-content-center">
                 <div className="form-group w-75 p-3">
-                <h2>Nueva cartelera</h2>
+                    <h2>Nueva cartelera</h2>
                     <form onSubmit={this.onSubmit}>
                         <input type="text" 
-                        placeholder="Nombre de la cartelera"
-                        onChange={this.changeProjectName} 
-                        value={this.state.projectName} 
-                        className="form-control form-group"  
+                            placeholder="Nombre de la cartelera"
+                            onChange={this.changeProjectName} 
+                            value={this.state.projectName} 
+                            className="form-control form-group"  
                         />
-                        {/* <input type="textarea" 
-                        placeholder="Descripción"
-                        onChange={this.changeDescription} 
-                        value={this.state.description} 
-                        className="form-control form-group"  
-                        /> */}
                         <Form.Control 
-                        as="textarea" 
-                        rows={3} 
-                        placeholder="Descripción"
-                        value={this.state.description} 
-                        onChange={this.changeDescription} 
-                        className="form-control form-group"
+                            as="textarea" 
+                            rows={3} 
+                            placeholder="Descripción"
+                            value={this.state.description} 
+                            onChange={this.changeDescription} 
+                            className="form-control form-group"
                         />
                         <input type="submit"
-                        className="btn btn-success btn-block"
-                        value='Crear'
+                            className="btn btn-success btn-block"
+                            value='Crear'
                         />
                     </form>
                 </div>

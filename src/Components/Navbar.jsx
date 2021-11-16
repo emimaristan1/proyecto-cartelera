@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import {Navbar, Nav, Container, NavDropdown} from 'react-bootstrap';
+import {Navbar, Nav, Container, NavDropdown, Badge} from 'react-bootstrap';
 
 export class NavbarN extends Component {
     handleLogout = () => {
@@ -8,36 +8,17 @@ export class NavbarN extends Component {
 
     };
 
-    /*changeSearch(event){
-        this.setState({
-            filter: event.target.value
-        })
-    }
-
-     showResults(arg){
-        var value = arg.target.value
-
-        axios.get('/search/users?q=' + value, function(data){
-            console.log("hola");
-        }).then(function(data){
-            console.log(value);
-            console.log(data)
-        }, 200);
-
-        axios.get('/search/bilboards?q=' + value, function(data){
-            console.log("hola");
-        }).then(function(data){
-            console.log(value);
-            console.log(data)
-        }, 200);
-    } */
-
     render() {
         let buttons;
 
-        if(this.props.user){
+        if(this.props.user){ //logueado
             buttons = (
                 <Nav>
+                    <Nav.Item>
+                        <Nav.Link onClick={() => this.props.showModal(true)}>
+                            Invitaciones {this.props.cantInv>0 ? (<Badge variant="primary" bg="danger" pill>{this.props.cantInv}</Badge>) : ''}
+                        </Nav.Link>
+                    </Nav.Item>
                     <NavDropdown title='Carteleras' id="basic-nav-dropdown">
                         <NavDropdown.Item href="/bilboard/new">Crear cartelera</NavDropdown.Item>
                         <NavDropdown.Divider />
@@ -50,7 +31,7 @@ export class NavbarN extends Component {
                     </NavDropdown>
                 </Nav>
             )
-        }else{
+        }else{ //no logueado
             buttons=(
                 <Nav>
                     <Nav.Link href="/users/newUser" >Nuevo Usuario</Nav.Link>
