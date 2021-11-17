@@ -65,7 +65,7 @@ class App extends Component {
                         <Route exact path="/users/edit" render={() => (this.state.loggedIn ? (<EditUser user={this.state.user}/>) : (<Inicio />))} />
                         {/* <Route exact path="/users/"><ListUsers /></Route> */}
 
-                        <Route exact path="/bilboard/new" render={() => (this.state.loggedIn ? (<NewBilboard /* user={this.state.user} *//>): (<Inicio />))}/>
+                        <Route exact path="/bilboard/new" render={() => (this.state.loggedIn ? (<NewBilboard user={this.state.user}/>): (<Inicio />))}/>
                         <Route exact path="/bilboard/list" ><ListBilboard/></Route>
                         <Route path="/bilboard/:bilboardId" render={() => (this.state.loggedIn ? (<Bilboard user={this.state.user}/>): (<Inicio />))}/>
                         

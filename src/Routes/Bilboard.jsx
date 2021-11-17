@@ -10,9 +10,12 @@ export class Bilboard extends Component {
             bilboardId:this.props.match.params.bilboardId, //obtiene la id del bilboard de la URL
             bilboard:'',
             members:[],
+            tasks:[],
+            task:'',
             member:'',
             loggedUser:this.props.user,
-            modalShow:false
+            modalShow:false,
+            showmodal:false
         }
 
         this.showModal = this.showModal.bind(this)
@@ -24,24 +27,46 @@ export class Bilboard extends Component {
         })
     }
 
+    handleClose = () => this.setState({showmodal: false});
+    
+    handleShow = () => this.setState({showmodal: true});
+
     componentDidMount(){    //al cargar los elementos
         axios.get('/bilboards/' + this.state.bilboardId).then(res=>{ //trae del backend el bilboard segun su id
             const bilboard = res.data
 
             /* console.log(bilboard); */
             bilboard.members.forEach(memberId => {
-
                 axios.get('/users/'+memberId)
                 .then(user => {
                     this.onChangeMember(user.data)
                     this.addMember()
                 })
             });
-
+            bilboard.tasks.forEach(taskId => {
+                axios.get('/tasks/'+taskId)
+                .then(task => {
+                    this.onChangeTask(task.data)
+                    this.addTask()
+                })
+            });
             this.setState({bilboard: bilboard})
         });
         
     }
+    addTask = () =>{  //agrega al array this.state.members el this.state.member cargado
+        this.setState(state => { 
+            const tasks = state.members.concat(this.state.task.titulo);
+            return {
+                tasks,
+                task:''
+            }
+        })
+    };
+
+    onChangeTask(tsk){ //carga this.state.member con mem
+        this.setState({task: tsk})  //asigna a this.state.member la id de usuario en mem
+    };
 
     addMember = () =>{  //agrega al array this.state.members el this.state.member cargado
         this.setState(state => { 
@@ -72,6 +97,22 @@ export class Bilboard extends Component {
                         </blockquote>
                     </Card.Body>                    
                 </Card>
+                <Card>
+                    <Card.Header><h5 style={{float: "left"}}>Tareas</h5><button onClick={this.handleShow} style={{float: "right"}} className="btn btn-success">Agregar tarea</button></Card.Header>
+                    <div className="d-flex flex-wrap justify-content-center">
+                    { this.state.tasks.map((task, key) => (
+                        <div key={key} className="alert alert-secondary" style={{margin: "10px", maxWidth: "300px", float: "left", minWidth: "250px"}}>
+                            <h5>{task.titulo}</h5>
+                            <p className="alert-heading fs-6">{task.descripcion}</p>
+                            <button onClick='' style={{float: "right"}} className="btn btn-success btn-sm">Completar</button>
+                            <button onClick='' style={{float: "center"}} className="btn btn-warning btn-sm">Modificar</button>
+                            <button onClick='' style={{float: "left"}} className="btn btn-danger btn-sm">Eliminar</button>
+                        </div>
+                    ))}
+                    </div>
+                </Card>
+
+
                 {
                     this.state.members.length!==0 ? (
                         <Card>
@@ -94,6 +135,35 @@ export class Bilboard extends Component {
                         </Card>
                     ) : ''
                 }
+                <Modal show={this.state.showmodal} onHide={this.handleClose}>
+                    <form onSubmit={this.handleClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Crear nueva tarea</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="mb-3">
+                                <label for="titulo" class="form-label">Titulo</label>
+                                <input type="text" 
+                                id="titulo"
+                                placeholder="Ingrese el titulo de la tarea"
+                                className="form-control form-group"  
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label for="descripcion" class="form-label">Descripcion</label>
+                                <input type="text" 
+                                id="descripcion"
+                                placeholder="Ingrese la descripcion"
+                                className="form-control form-group"  
+                                />
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button className="btn btn-danger" onClick={this.handleClose}>Cerrar</Button>
+                            <Button type="submit" className="btn btn-success" onClick={this.handleClose}>Crear</Button>
+                        </Modal.Footer>
+                    </form>
+                </Modal>
 
                 <Modal 
                     size="lg"
