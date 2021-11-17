@@ -6,7 +6,7 @@ import { Redirect } from 'react-router';
 class Login extends Component{
     state = {}
 
-    handleSubmit = e => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         
         const data = {
@@ -14,19 +14,18 @@ class Login extends Component{
             password: this.password
         }
 
-        axios.post('/users/login', data)
-        .then(res => {
-            /* console.log(res); */
-            localStorage.setItem('token', res.data.token)
-            this.setState({
-                loggedIn: true
-            })
-            this.props.setUser(res.data.user)
-        })
-        .catch(err => {
-            //console.log(err);
-            alert(err.request.response)
-      
+        const user = await axios.post('/users/login', data);
+        localStorage.setItem('token', user.data.token)
+        this.setState({loggedIn: true})
+        this.props.setUser(user.data.user)
+
+        const config = {headers: {"x-access-token": user.data.token}}
+
+        axios.get('/invitation/my', config).then(res => {
+            console.log(res.data.length);
+            this.props.setInvitation(res.data);
+        },err => {
+            console.log(err);
         })
     }
 
@@ -35,10 +34,10 @@ class Login extends Component{
             return <Redirect to={'/'} />
         }
         return (
-            <div className="container">
-                <h2>Login</h2>
-                <div className="form-group">
-                    <form onSubmit={this.handleSubmit}>
+            <div className="container d-flex justify-content-center" >
+                <div className="form-group w-50 p-3">
+                    <h2>Login</h2>
+                    <form onSubmit={this.handleSubmit} >
                         <input type="email" 
                             placeholder="Email"
                             onChange={e => this.email = e.target.value}  
