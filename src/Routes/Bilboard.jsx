@@ -28,6 +28,30 @@ export class Bilboard extends Component {
         })
     }
 
+    completeTask(id){
+        //Agregar codigo para eliminar tarea
+    }
+    modifyTask(id){
+        //Agregar codigo para modificar tarea
+    }
+    createTask = () =>{ 
+        const titulo1 = document.getElementById("titulo");
+        const descripcion1 = document.getElementById("descripcion");
+        const created = {
+            titulo: titulo1.value,
+            descripcion: descripcion1.value
+        }
+        
+        axios.post('/tasks/new', created).then(response => {
+            const created1 = {
+                idBilboard: this.state.bilboard._id,
+                idTask: response.data._id
+            };
+            console.log(created1);
+            axios.post('/bilboards/addtask', created1).then(res => alert(res.data)).catch(error => {alert(error.message)})
+        }).catch(err => {alert(err.message)});
+    };
+
     handleClose = () => this.setState({showmodal: false});
     
     handleShow = () => this.setState({showmodal: true});
@@ -36,7 +60,7 @@ export class Bilboard extends Component {
         axios.get('/bilboards/' + this.state.bilboardId).then(res=>{ //trae del backend el bilboard segun su id
             const bilboard = res.data
 
-            /* console.log(bilboard); */
+            
             bilboard.members.forEach(memberId => {
                 axios.get('/users/'+memberId)
                 .then(user => {
@@ -55,18 +79,14 @@ export class Bilboard extends Component {
         });
         
     }
-    addTask = () =>{  //agrega al array this.state.members el this.state.member cargado
-        this.setState(state => { 
-            const tasks = state.members.concat(this.state.task.titulo);
-            return {
-                tasks,
-                task:''
-            }
+    addTask = () =>{  //agrega al array this.state.tasks el this.state.task cargado
+        this.setState({ 
+            tasks: this.state.tasks.concat([this.state.task])
         })
     };
 
-    onChangeTask(tsk){ //carga this.state.member con mem
-        this.setState({task: tsk})  //asigna a this.state.member la id de usuario en mem
+    onChangeTask(tsk){ //carga this.state.task con tsk
+        this.setState({task: tsk})  //asigna a this.state.task la id de la task en tsk
     };
 
     addMember = () =>{  //agrega al array this.state.members el this.state.member cargado
@@ -105,9 +125,8 @@ export class Bilboard extends Component {
                         <div key={key} className="alert alert-secondary" style={{margin: "10px", maxWidth: "300px", float: "left", minWidth: "250px"}}>
                             <h5>{task.titulo}</h5>
                             <p className="alert-heading fs-6">{task.descripcion}</p>
-                            <button onClick='' style={{float: "right"}} className="btn btn-success btn-sm">Completar</button>
-                            <button onClick='' style={{float: "center"}} className="btn btn-warning btn-sm">Modificar</button>
-                            <button onClick='' style={{float: "left"}} className="btn btn-danger btn-sm">Eliminar</button>
+                            <button onClick={this.completeTask(task._id)} style={{float: "right", marginLeft: '5px'}} className="btn btn-success btn-sm">Completar</button>
+                            <button onClick={this.modifyTask(task._id)} style={{float: "right"}} className="btn btn-warning btn-sm">Modificar</button>
                         </div>
                     ))}
                     </div>
@@ -137,7 +156,7 @@ export class Bilboard extends Component {
                     ) : ''
                 }
                 <Modal show={this.state.showmodal} onHide={this.handleClose}>
-                    <form onSubmit={this.handleClose}>
+                    <form onSubmit={this.createTask}>
                         <Modal.Header closeButton>
                             <Modal.Title>Crear nueva tarea</Modal.Title>
                         </Modal.Header>

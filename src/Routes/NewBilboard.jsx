@@ -37,7 +37,7 @@ export class NewBilboard extends Component{
         }
 
         axios.post('/bilboards/new', created)
-        .then(response => alert(response.data))
+        .then(response => alert(response.data)).catch(function (error) {alert(error.message)})
 
         this.setState({
             projectName:'',
