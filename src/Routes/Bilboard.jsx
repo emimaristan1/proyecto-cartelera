@@ -102,7 +102,7 @@ export class Bilboard extends Component {
                     members={this.state.members}
                     bilboardid={this.state.bilboard._id}
                     bilboardname={this.state.bilboard.projectName}
-                    authId={this.props.user._id}
+                    authid={this.props.user._id}
                 />
 
             </>

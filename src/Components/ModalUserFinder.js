@@ -49,7 +49,7 @@ function ModalUserFinder(props) {
             bilboardId: props.bilboardid,
             bilboardName: props.bilboardname,
             userId: userId,
-            authId: props.authId
+            authId: props.authid
         }
         /* console.log(created); */
 

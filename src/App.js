@@ -46,8 +46,8 @@ class App extends Component {
             
             axios.get('/invitation/my', config)
             .then(res => {
-                /* console.log(res.data.filter(element => element.aprobe)); */
-                this.setInvitation(res.data.filter(element => element.aprobe));
+                this.setInvitation(res.data/* .filter(element => element.aprobe===0) */);
+                console.log(res.data);
             },err => {
                 console.log(err);
             })
@@ -65,7 +65,7 @@ class App extends Component {
     showModal = value =>{
         this.setState({modalShow: value})
     }
-    b
+    
     render(){
 
         return (
@@ -76,7 +76,7 @@ class App extends Component {
                             user={this.state.user} 
                             setUser={this.setUser} 
                             showModal={this.showModal}
-                            cantInv={this.state.invitations.length}
+                            cantInv={this.state.invitations.filter(element => element.aprobe===0).length}
                         />
                         <hr />
                         <Switch>

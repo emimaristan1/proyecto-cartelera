@@ -17,7 +17,20 @@ function ModalInvitation(props) {
             setTimeout(() => {  
                 window.location.reload(false);
             }, 800);
-        });
+
+            /* class MyComponent extends React.Component{
+                shouldComponentUpdate(nextProps){
+                  return nextProps.value !== this.props.value;
+                }
+                render(){
+                  return (
+                   <div>{"My Component " + this.props.value}</div>
+                  );  
+               }
+              } */
+        },err => {
+            console.log(err);
+        })
 
     }
 
@@ -38,10 +51,15 @@ function ModalInvitation(props) {
                         props.invitations.map((invitation,key) => (
                             <tr key={key}>
                                 <td>{invitation.bilboardName}</td>
-                                <td>
-                                    <Button onClick={(e) => answer(invitation._id, true)} variant="success">✔</Button>
-                                    <Button onClick={(e) => answer(invitation._id, false)} variant="danger">❌</Button>
-                                </td>
+                                {invitation.aprobe===0 ? 
+                                    <td>
+                                        <Button onClick={(e) => answer(invitation._id, "true")} variant="success">✔</Button>
+                                        <Button onClick={(e) => answer(invitation._id, "false")} variant="danger">❌</Button>
+                                    </td> : 
+                                    invitation.aprobe===1 ? 
+                                        <td>Aprobada</td> : 
+                                        <td>Rechazada</td>
+                                }
                             </tr>
                         ))}
                     </tbody>

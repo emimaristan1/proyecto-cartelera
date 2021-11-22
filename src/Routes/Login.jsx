@@ -22,7 +22,6 @@ class Login extends Component{
         const config = {headers: {"x-access-token": user.data.token}}
 
         axios.get('/invitation/my', config).then(res => {
-            console.log(res.data.length);
             this.props.setInvitation(res.data);
         },err => {
             console.log(err);
