@@ -89,7 +89,7 @@ class App extends Component {
                             <Route exact path="/users/list"><ListUsers /></Route>
 
                             <Route exact path="/bilboard/new" render={() => (this.state.loggedIn ? (<NewBilboard user={this.state.user}/>): (<Inicio />))}/>
-                            <Route exact path="/bilboard/list" ><ListBilboard/></Route>
+                            <Route exact path="/bilboard/list" user={this.state.user}><ListBilboard/></Route>
                             <Route path="/bilboard/:bilboardId" render={() => (this.state.loggedIn ? (<Bilboard user={this.state.user}/>): (<Inicio />))}/>
                             
                         </Switch>

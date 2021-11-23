@@ -8,7 +8,12 @@ function ListBilboard() {
     const [carteleras, setTodas] = useState([])
     
     const consumeApiBilboards = async() => {
-        await axios.get('/bilboards/list')
+        const head={
+            headers: {
+                "x-access-token": localStorage.getItem("token")
+            }
+        }
+        await axios.get('/bilboards/my', head)
         .then(res=>{
             setTodas(res.data)
         })
