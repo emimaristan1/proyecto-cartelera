@@ -15,14 +15,7 @@ function ModalUserFinder(props) {
         .then(res=>{
             setUsers(res.data)
         })
-    }
-
-    useEffect(() => {
-        async function fetchData(){
-            await consumeApiUsers()
-        }
-        fetchData()
-    }, [])
+    }, [enviado])
 
     const filtrar=(termBusqueda) =>{
         //de todos los usuarios que devuelve el backend
