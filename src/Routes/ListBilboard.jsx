@@ -33,7 +33,6 @@ function ListBilboard() {
                 carteleras.map((cartelera, key) =>(
                     <div key={key.toString()} className="alert alert-info">
                         <a href={"/bilboard/" + cartelera._id}>
-                        {/* <a href={"/bilboard/" + encodeURI(cartelera.projectName)}> */}
                             <h4 className="alert-heading fs-3">{cartelera.projectName}</h4>
                         </a>
                         <p className="alert-heading fs-5">{cartelera.description}</p>

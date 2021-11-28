@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Button } from 'react-bootstrap';
+import { Nav } from 'react-bootstrap';
 
 class Perfil extends Component {
     constructor(props){
@@ -17,9 +17,12 @@ class Perfil extends Component {
                     <>
                         <h3>hi {this.state.user.name}</h3>
                         <p>{this.state.user.email}</p>
-                        <Button variant="primary" href="/users/edit">Editar perfil</Button>
+                        <Nav variant="pills" defaultActiveKey="/users/edit">
+                            <Nav.Item>
+                                <Nav.Link href="/users/edit">Editar Perfil</Nav.Link>
+                            </Nav.Item>
+                        </Nav>
                     </>
-
                 }
                 
             </div>
