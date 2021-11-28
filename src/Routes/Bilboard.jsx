@@ -1,8 +1,7 @@
 import axios from 'axios';
 import React, { Component } from 'react'
-import { Card, ListGroup, Button, Modal } from 'react-bootstrap';
+import { Card, ListGroup, Button, Modal, Nav } from 'react-bootstrap';
 import { withRouter } from "react-router";
-import ModalUserFinder from '../Components/ModalUserFinder';
 
 export class Bilboard extends Component {
     constructor(props){
@@ -104,7 +103,6 @@ export class Bilboard extends Component {
     };
 
     render() {
-       /*  console.log(this.state.members); */
         return this.state.bilboard ? (
             <>
                 <Card>
@@ -112,9 +110,7 @@ export class Bilboard extends Component {
 
                     <Card.Body>
                         <blockquote className="blockquote mb-0">
-                        <p>
-                            {this.state.bilboard.description}
-                        </p>
+                            <p>{this.state.bilboard.description}</p>
                         </blockquote>
                     </Card.Body>                    
                 </Card>
@@ -136,12 +132,18 @@ export class Bilboard extends Component {
                 {
                     this.state.members.length!==0 ? (
                         <Card>
-                            <Card.Header as="h5">Miembros</Card.Header>
-                            {
-                                this.state.loggedUser._id===this.state.bilboard.authId ? (
-                                    <Button onClick={() => this.showModal(true)}>Agregar</Button>
-                                ) : ''
-                            }
+                            <Card.Header as="h5" style={{float: "left"}}>Miembros
+                                {
+                                    this.state.loggedUser._id===this.state.bilboard.authId ? (
+                                        <Nav variant="pills" style={{float: "right"}}>
+                                            <Nav.Item>
+                                                <Nav.Link href={"/bilboard/" + this.state.bilboardId + "/addmembers"}> Agregar Miembros</Nav.Link>
+                                            </Nav.Item>
+                                        </Nav>
+                                    ) : ''
+                                }
+                            
+                            </Card.Header>
 
                             <ListGroup as="ol">
                                 {
@@ -184,15 +186,6 @@ export class Bilboard extends Component {
                         </Modal.Footer>
                     </form>
                 </Modal>
-
-                <ModalUserFinder
-                    show={this.state.modalShow}
-                    onHide={() => this.showModal(false)}
-                    members={this.state.members}
-                    bilboardid={this.state.bilboard._id}
-                    bilboardname={this.state.bilboard.projectName}
-                    authid={this.props.user._id}
-                />
 
             </>
         ) : (<div><h1>Loading...</h1></div>)

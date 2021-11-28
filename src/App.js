@@ -13,6 +13,7 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import axios from 'axios';
 import React, { Component } from "react";
 import ModalInvitation from './Components/ModalInvitation';
+import AddMember from './Routes/AddMember';
 
 //https://bakend-proyecto-cartelera.herokuapp.com/
 
@@ -47,7 +48,7 @@ class App extends Component {
             axios.get('/invitation/my', config)
             .then(res => {
                 this.setInvitation(res.data/* .filter(element => element.aprobe===0) */);
-                console.log(res.data);
+                /* console.log(res.data); */
             },err => {
                 console.log(err);
             })
@@ -85,11 +86,12 @@ class App extends Component {
                             <Route exact path="/users/newUser" render={() => (!this.state.loggedIn ? (<NewUser />) : (<Inicio />))} />
                             <Route exact path="/users/login" render={() => (!this.state.loggedIn ? (<Login setUser={this.setUser} setInvitation={this.setInvitation}/>) : (<Inicio />))} />
                             <Route exact path="/users/perfil" render={() => (this.state.loggedIn ? (<Perfil user={this.state.user} />) : (<Inicio />))}/>
-                            <Route exact path="/users/edit" render={() => (this.state.loggedIn ? (<EditUser user={this.state.user}/>) : (<Inicio />))} />
+                            <Route exact path="/users/edit" render={() => (this.state.loggedIn ? (<EditUser user={this.state.user} setUser={this.setUser}/>) : (<Inicio />))} />
                             <Route exact path="/users/list"><ListUsers /></Route>
 
                             <Route exact path="/bilboard/new" render={() => (this.state.loggedIn ? (<NewBilboard user={this.state.user}/>): (<Inicio />))}/>
                             <Route exact path="/bilboard/list" user={this.state.user}><ListBilboard/></Route>
+                            <Route path="/bilboard/:bilboardId/addmembers" render={() => (this.state.loggedIn ? (<AddMember user={this.state.user}/>): (<Inicio />))}/>
                             <Route path="/bilboard/:bilboardId" render={() => (this.state.loggedIn ? (<Bilboard user={this.state.user}/>): (<Inicio />))}/>
                             
                         </Switch>
