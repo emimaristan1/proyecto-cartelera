@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { Component } from 'react'
-import { Card, ListGroup, Button, Modal, Nav } from 'react-bootstrap';
+import { Card, ListGroup, Button, Modal, Nav ,Alert } from 'react-bootstrap';
 import { withRouter } from "react-router";
 
 export class Bilboard extends Component {
@@ -15,7 +15,9 @@ export class Bilboard extends Component {
             member:'',
             loggedUser:this.props.user,
             modalShow:false,
-            showmodal:false
+            showmodal:false,
+            msg:'',
+            errorMsg:''
         }
 
         this.showModal = this.showModal.bind(this)
@@ -78,6 +80,7 @@ export class Bilboard extends Component {
         });
         
     }
+    
     addTask = () =>{  //agrega al array this.state.tasks el this.state.task cargado
         this.setState({ 
             tasks: this.state.tasks.concat([this.state.task])
@@ -102,12 +105,40 @@ export class Bilboard extends Component {
         this.setState({member: mem})  //asigna a this.state.member la id de usuario en mem
     };
 
+    handleclick(){
+        const head={
+            headers: {
+                "x-access-token": localStorage.getItem("token")
+            }
+        }
+
+        axios.post('/bilboards/unsubscribeme', {idBilboard: this.state.bilboardId}, head)
+        .then(response => {
+            this.setMsg(response.data)
+
+            //elimina la invitacion
+            axios.delete('/invitation/delete', {idBilboard: this.state.bilboardId}, head)
+
+            //redirige al inicio
+           /*  setTimeout(() => {  
+                window.location.replace('/');
+            }, 3000); */
+        }, error => {
+            this.setState({errorMsg: error.response.data})
+        });
+    }
+
+    setMsg = data =>{this.setState({msg: data})}
+
     render() {
         return this.state.bilboard ? (
             <>
+                {this.state.msg && <Message data={this.state.msg} setdata={this.setMsg}/>}
+                {this.state.errorMsg && <ErrorMessage error={this.state.errorMsg} />}
                 <Card>
-                    <Card.Header as="h2">{this.state.bilboard.projectName}</Card.Header>
-
+                    <Card.Header as="h2">
+                        {this.state.bilboard.projectName}
+                    </Card.Header>
                     <Card.Body>
                         <blockquote className="blockquote mb-0">
                             <p>{this.state.bilboard.description}</p>
@@ -115,7 +146,13 @@ export class Bilboard extends Component {
                     </Card.Body>                    
                 </Card>
                 <Card>
-                    <Card.Header><h5 style={{float: "left"}}>Tareas</h5><button onClick={this.handleShow} style={{float: "right"}} className="btn btn-success">Agregar tarea</button></Card.Header>
+                    <Card.Header>
+                        <h5 style={{float: "left"}}>Tareas</h5>
+                        <button onClick={this.handleShow} style={{float: "right"}} className="btn btn-success">
+                            Agregar tarea
+                        </button>
+                    </Card.Header>
+
                     <div className="d-flex flex-wrap justify-content-center">
                     { this.state.tasks.map((task, key) => (
                         <div key={key} className="alert alert-secondary" style={{margin: "10px", maxWidth: "300px", float: "left", minWidth: "250px"}}>
@@ -127,22 +164,19 @@ export class Bilboard extends Component {
                     ))}
                     </div>
                 </Card>
-
-
                 {
-                    this.state.members.length!==0 ? (
+                    this.state.members.length!==0 && 
                         <Card>
                             <Card.Header as="h5" style={{float: "left"}}>Miembros
-                                {
-                                    this.state.loggedUser._id===this.state.bilboard.authId ? (
-                                        <Nav variant="pills" style={{float: "right"}}>
-                                            <Nav.Item>
-                                                <Nav.Link href={"/bilboard/" + this.state.bilboardId + "/addmembers"}> Agregar Miembros</Nav.Link>
-                                            </Nav.Item>
-                                        </Nav>
-                                    ) : ''
+                                {this.state.loggedUser._id===this.state.bilboard.authId &&
+                                    <Nav variant="pills" style={{float: "right"}}>
+                                        <Nav.Item>
+                                            <Nav.Link href={"/bilboard/" + this.state.bilboardId + "/addmembers"}> 
+                                                Agregar Miembros
+                                            </Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
                                 }
-                            
                             </Card.Header>
 
                             <ListGroup as="ol">
@@ -155,7 +189,6 @@ export class Bilboard extends Component {
                                 }
                             </ListGroup>
                         </Card>
-                    ) : ''
                 }
                 <Modal show={this.state.showmodal} onHide={this.handleClose}>
                     <form onSubmit={this.createTask}>
@@ -187,9 +220,32 @@ export class Bilboard extends Component {
                     </form>
                 </Modal>
 
+                
+                {
+                    //si el usuario no es el administrador
+                    this.state.loggedUser !== this.state.bilboard.authId &&
+                    <Button variant="danger" onClick={(e) => this.handleclick()}>Darse de baja</Button>
+                }
+
             </>
         ) : (<div><h1>Loading...</h1></div>)
     }
+}
+
+function Message(props){
+    return(
+        <Alert variant='success' onClose={() => props.setdata('')} dismissible>
+            {props.data}
+        </Alert>
+    )
+}
+
+function ErrorMessage(props){
+    return(
+        <Alert variant='danger'>
+            {props.error}
+        </Alert>
+    )
 }
 
 export default withRouter(Bilboard)

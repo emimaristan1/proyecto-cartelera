@@ -18,9 +18,7 @@ export class AddMember extends Component {
         }
     }
 
-    handleChange = e => {
-        this.filtrar(e.target.value);
-    }
+    handleChange = e => {this.filtrar(e.target.value);}
 
     filtrar=(termBusqueda) =>{
         //de todos los usuarios que devuelve el backend
@@ -35,9 +33,6 @@ export class AddMember extends Component {
 
         //excluye los usuarios que ya estan inculidos en el bilboard
         resBusqueda=resBusqueda.filter(elemento => !this.state.members.includes(elemento.email))
-
-        //excluye los usuarios que ya estan invitados en el bilboard
-        //resBusqueda=resBusqueda.filter(elemento => !this.state.invitations.includes(elemento._id))
 
         //si el termino de busqueda esta vacio no muestra nada
         if(termBusqueda.toString().length<1)
@@ -68,6 +63,7 @@ export class AddMember extends Component {
     }
 
     componentDidUpdate(prevState){
+        //actualiza la lista de invitaciones
         if(prevState.resUsers !== this.state.resUsers){
             axios.get('/invitation/' + this.state.bilboardId).then(res=>{this.setState({invitations: res.data})});
         }
@@ -97,9 +93,7 @@ export class AddMember extends Component {
         axios.post('/invitation/new', created).then(response => this.setMsg(response.data))
     }
 
-    setMsg = data =>{
-        this.setState({msg: data})
-    }
+    setMsg = data =>{this.setState({msg: data})}
 
     render() {
         return (
