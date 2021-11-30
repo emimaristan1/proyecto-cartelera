@@ -29,11 +29,16 @@ export class Bilboard extends Component {
     }
 
     completeTask(id){
-        //Agregar codigo para eliminar tarea
+        const created = {
+            idBilboard: this.state.bilboard._id,
+            idTask: id
+        };
+
+        axios.post('/bilboards/deletetask', created).then(res => alert(res.data)).catch(error => {alert(error.message)});
+        //     axios.post('/tasks/delete', created1).then(res => alert(res.data)).catch(error => {alert(error.message)})
+        window.location.href = window.location.href;
     }
-    modifyTask(id){
-        //Agregar codigo para modificar tarea
-    }
+
     createTask = () =>{ 
         const titulo1 = document.getElementById("titulo");
         const descripcion1 = document.getElementById("descripcion");
@@ -41,15 +46,18 @@ export class Bilboard extends Component {
             titulo: titulo1.value,
             descripcion: descripcion1.value
         }
-        
+
         axios.post('/tasks/new', created).then(response => {
             const created1 = {
-                idBilboard: this.state.bilboard._id,
+                idBilboard: this.state.bilboardId,
                 idTask: response.data._id
             };
-            console.log(created1);
-            axios.post('/bilboards/addtask', created1).then(res => alert(res.data)).catch(error => {alert(error.message)})
+            axios.post('/bilboards/addtask', created1).then(res => alert(res.data)).catch(error => {alert(error.message)});
         }).catch(err => {alert(err.message)});
+        
+        
+        
+        this.handleClose();
     };
 
     handleClose = () => this.setState({showmodal: false});
@@ -125,8 +133,7 @@ export class Bilboard extends Component {
                         <div key={key} className="alert alert-secondary" style={{margin: "10px", maxWidth: "300px", float: "left", minWidth: "250px"}}>
                             <h5>{task.titulo}</h5>
                             <p className="alert-heading fs-6">{task.descripcion}</p>
-                            <button onClick={this.completeTask(task._id)} style={{float: "right", marginLeft: '5px'}} className="btn btn-success btn-sm">Completar</button>
-                            <button onClick={this.modifyTask(task._id)} style={{float: "right"}} className="btn btn-warning btn-sm">Modificar</button>
+                            <Button onClick={ ()=> this.completeTask(task._id)} style={{float: "right", marginLeft: '5px'}} className="btn btn-success btn-sm">Completar</Button>
                         </div>
                     ))}
                     </div>
@@ -180,7 +187,7 @@ export class Bilboard extends Component {
                         </Modal.Body>
                         <Modal.Footer>
                             <Button className="btn btn-danger" onClick={this.handleClose}>Cerrar</Button>
-                            <Button type="submit" className="btn btn-success" onClick={this.handleClose}>Crear</Button>
+                            <Button type="submit" className="btn btn-success">Crear</Button>
                         </Modal.Footer>
                     </form>
                 </Modal>
