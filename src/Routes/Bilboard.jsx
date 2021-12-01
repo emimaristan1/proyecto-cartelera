@@ -1,7 +1,9 @@
 import axios from 'axios';
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import { Card, ListGroup, Button, Modal, Nav ,Alert } from 'react-bootstrap';
 import { withRouter } from "react-router";
+import ErrorMsg from '../Components/ErrorMsg';
+import SuccessMsg from '../Components/SuccessMsg';
 
 export class Bilboard extends Component {
     constructor(props){
@@ -35,27 +37,14 @@ export class Bilboard extends Component {
     modifyTask(id){
         //Agregar codigo para modificar tarea
     }
-    createTask = () =>{ 
-        const titulo1 = document.getElementById("titulo");
-        const descripcion1 = document.getElementById("descripcion");
-        const created = {
-            titulo: titulo1.value,
-            descripcion: descripcion1.value
-        }
-        
-        axios.post('/tasks/new', created).then(response => {
-            const created1 = {
-                idBilboard: this.state.bilboard._id,
-                idTask: response.data._id
-            };
-            console.log(created1);
-            axios.post('/bilboards/addtask', created1).then(res => alert(res.data)).catch(error => {alert(error.message)})
-        }).catch(err => {alert(err.message)});
-    };
 
-    handleClose = () => this.setState({showmodal: false});
+    handleClose = () => this.setModalShow(false)
+
+    setModalShow(state){
+        this.setState({showmodal: state});
+    }
     
-    handleShow = () => this.setState({showmodal: true});
+    handleShow = () => this.setModalShow(true);
 
     componentDidMount(){    //al cargar los elementos
         axios.get('/bilboards/' + this.state.bilboardId).then(res=>{ //trae del backend el bilboard segun su id
@@ -190,7 +179,8 @@ export class Bilboard extends Component {
                             </ListGroup>
                         </Card>
                 }
-                <Modal show={this.state.showmodal} onHide={this.handleClose}>
+                <Modalito show={this.state.showmodal} onHide={() => this.setModalShow(false)}/>
+                {/* <Modal show={this.state.showmodal} onHide={this.handleClose}>
                     <form onSubmit={this.createTask}>
                         <Modal.Header closeButton>
                             <Modal.Title>Crear nueva tarea</Modal.Title>
@@ -218,18 +208,82 @@ export class Bilboard extends Component {
                             <Button type="submit" className="btn btn-success" onClick={this.handleClose}>Crear</Button>
                         </Modal.Footer>
                     </form>
-                </Modal>
+                </Modal> */}
 
                 
                 {
                     //si el usuario no es el administrador
-                    this.state.loggedUser !== this.state.bilboard.authId &&
+                    this.state.loggedUser._id !== this.state.bilboard.authId &&
                     <Button variant="danger" onClick={(e) => this.handleclick()}>Darse de baja</Button>
                 }
 
             </>
         ) : (<div><h1>Loading...</h1></div>)
     }
+}
+
+function Modalito(props){
+    const [msg, setMsg] = useState();
+    const [errorMsg, seterrorMsg] = useState();
+    const [titulo, setTitulo] = useState();
+    const [descripcion, setdescripcion] = useState();
+
+    const createTask = () =>{ 
+        /* const titulo1 = document.getElementById("titulo");
+        const descripcion1 = document.getElementById("descripcion"); */
+        const created = {
+            titulo: titulo,
+            descripcion: descripcion
+        }
+        
+        axios.post('/tasks/new', created).then(response => {
+            const created1 = {
+                idBilboard: this.state.bilboard._id,
+                idTask: response.data._id
+            };
+            console.log(created1);
+            axios.post('/bilboards/addtask', created1)
+            .then(res => 
+                setMsg(res.data)
+            ).catch(error => seterrorMsg(error.response.data));
+
+        }).catch(err => seterrorMsg(err.data));
+    };
+
+    return(
+    <Modal {...props}>
+        <Modal.Header closeButton>
+                <Modal.Title>Crear nueva tarea</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+            {errorMsg && <ErrorMsg error={errorMsg}/>}
+            {msg && <SuccessMsg msg={msg}/>}
+
+                <div className="mb-3">
+                    <label className="form-label">Titulo</label>
+                    <input type="text" 
+                        id="titulo"
+                        placeholder="Ingrese el titulo de la tarea"
+                        onChange={e => setTitulo(e.target.value)}
+                        className="form-control form-group"  
+                    />
+                </div>
+                <div className="mb-3">
+                    <label className="form-label">Descripcion</label>
+                    <input type="text" 
+                    id="descripcion"
+                    onChange={e => setdescripcion(e.target.value)}
+                    placeholder="Ingrese la descripcion"
+                    className="form-control form-group"  
+                    />
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button className="btn btn-danger" onClick={props.onHide}>Cerrar</Button>
+                <Button type="submit" className="btn btn-success" onClick={createTask}>Crear</Button>
+            </Modal.Footer>
+        </Modal>
+    )
 }
 
 function Message(props){

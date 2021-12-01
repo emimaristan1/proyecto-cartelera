@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios'
 import { Component } from "react";
 import { Redirect } from 'react-router';
-import { Alert } from 'react-bootstrap';
+import ErrorMsg from '../Components/ErrorMsg';
 
 class Login extends Component{
     constructor(props){
@@ -50,7 +50,7 @@ class Login extends Component{
                 <div className="form-group w-50 p-3">
                     <h2>Login</h2>
                     <br />
-                    {this.state.errorMsg && <ErrorMessage error={this.state.errorMsg} />}
+                    {this.state.errorMsg && <ErrorMsg error={this.state.errorMsg} />}
                     <form onSubmit={this.handleSubmit} >
                         <input type="email" 
                             placeholder="Email"
@@ -76,13 +76,6 @@ class Login extends Component{
     }
 }
 
-function ErrorMessage(props){
-    return(
-        <Alert variant='danger'>
-            {props.error}
-        </Alert>
-    )
-}
 
 export default Login
 

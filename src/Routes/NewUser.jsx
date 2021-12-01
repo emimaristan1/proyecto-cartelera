@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios'
+import ErrorMsg from '../Components/ErrorMsg';
+import SuccessMsg from '../Components/SuccessMsg';
 
 export class NewUser extends Component{
     constructor(){
@@ -8,7 +10,9 @@ export class NewUser extends Component{
         this.state = {
             name:'',
             email:'',
-            password:''
+            password:'',
+            errorMsg: '',
+            msg:''
         }
         this.changeName = this.changeName.bind(this)
         this.changeEmail = this.changeEmail.bind(this)
@@ -41,20 +45,23 @@ export class NewUser extends Component{
         }
 
         axios.post('/users/new', registered)
-        .then(response => console.log(response.data))
+        .then(response => {
+            this.setState({msg: response.data.msg, errorMsg:''})
+        },error => {
+            this.setState({errorMsg: error.response.data, msg:''})
+        });
 
-        this.setState({
-            name:'',
-            email:'',
-            password:''
-        })
+        this.setState({name:'',email:'',password:''})
     };
     
     render(){
         return (
             <div className="container d-flex justify-content-center">
                 <div className="form-group w-50 p-3">
-                <h2>Nuevo usuario</h2>
+                    <h2>Nuevo usuario</h2>
+                    <br />
+                    {this.state.errorMsg && <ErrorMsg error={this.state.errorMsg} />}
+                    {this.state.msg && <SuccessMsg msg={this.state.msg} />}
                     <form onSubmit={this.onSubmit}>
                         <input type="text" 
                         placeholder="Nombre"
@@ -62,22 +69,26 @@ export class NewUser extends Component{
                         value={this.state.name} 
                         className="form-control form-group"  
                         />
+                        <br />
                         <input type="email" 
                         placeholder="Email"
                         onChange={this.changeEmail} 
                         value={this.state.email} 
                         className="form-control form-group"  
                         />
+                        <br />
                         <input type="password" 
                         placeholder="Password"
                         onChange={this.changePassword} 
                         value={this.state.password} 
                         className="form-control form-group"  
                         />
+                        <br />
                         <input type="submit"
                         className="btn btn-success btn-block"
                         value='Registrarme'
                         />
+                        <br />
                     </form>
                 </div>
             </div>
