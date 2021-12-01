@@ -9,6 +9,14 @@ export const Container = styled.div`
   }
 `;
 
+export const Centered = styled.div`
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 40px;
+    font-weight: bold;
+    text-align: center;
+`
+
 export const Wrapper = styled.div`
     display: flex;
     flex-direction: column;

@@ -16,6 +16,7 @@ import EditUser from "./Routes/EditUser";
 import Bilboard from "./Routes/Bilboard";
 import ListUsers from "./Routes/ListUsers"
 import AddMember from './Routes/AddMember';
+import About from "./Routes/About";
 
 
 //https://bakend-proyecto-cartelera.herokuapp.com/
@@ -32,6 +33,8 @@ class App extends Component {
     }
 
     componentDidMount() {
+        document.title = 'TextVoice';
+
         if(localStorage.getItem("token")){ //si no esta logueado
             const config = {
                 headers: {
@@ -80,7 +83,7 @@ class App extends Component {
                         showModal={this.showModal}
                         cantInv={this.state.invitations.filter(element => element.aprobe===0).length}
                     />
-                    <div className="container-lg">
+                    <div className="container-lg Inicio">
                         <br />
                         <Switch>
                             <Route index exact path="/" component={() => <Inicio user={this.state.user} isLoggedIn={this.state.loggedIn}/>}/>
@@ -96,6 +99,8 @@ class App extends Component {
                             <Route path="/bilboard/:bilboardId/addmembers" render={() => (this.state.loggedIn ? (<AddMember user={this.state.user}/>): (<Inicio />))}/>
                             <Route path="/bilboard/:bilboardId" render={() => (this.state.loggedIn ? (<Bilboard user={this.state.user}/>): (<Inicio />))}/>
                             
+                            <Route exact path="/desarrolladores" component={()=> <About client={false}/>}/>
+                            <Route exact path="/clientes" component={()=> <About client={true}/>}/>
                         </Switch>
                         
                     </div>

@@ -21,7 +21,7 @@ export class NavbarN extends Component {
         return (
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
                 <Container>
-                    <Navbar.Brand href="/">Proyecto Cartelera</Navbar.Brand>
+                    <Navbar.Brand href="/">TextVoice</Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
                         <Nav className="me-auto"
