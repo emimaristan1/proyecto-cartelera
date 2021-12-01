@@ -50,6 +50,8 @@ export class NewBilboard extends Component{
 
         this.setState({projectName:'',description:''})
     };
+
+    setMsg = data =>{this.setState({msg: data})}
     
     render(){
         return (
@@ -58,7 +60,7 @@ export class NewBilboard extends Component{
                     <h2>Nueva cartelera</h2>
                     <br />
                     {this.state.err && <ErrorMsg error={this.state.err}/>}
-                    {this.state.msg && <SuccessMsg msg={this.state.msg}/>}
+                    {this.state.msg && <SuccessMsg msg={this.state.msg} setdata={this.setMsg}/>}
                     <form onSubmit={this.onSubmit}>
                         <input type="text" 
                             placeholder="Nombre de la cartelera"

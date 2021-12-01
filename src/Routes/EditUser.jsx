@@ -17,7 +17,10 @@ class EditUser extends Component {
         this.changeName = this.changeName.bind(this)
         this.changeEmail = this.changeEmail.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.setMsg = this.setMsg.bind(this)
     }
+
+    setMsg = data =>{this.setState({msg: data})}
 
     changeName(event){
         this.setState({
@@ -64,8 +67,8 @@ class EditUser extends Component {
         return (
             <div> 
                 <div className="form-group">
-                    {this.state.modifyIn===2 && <ErrorMsg error={this.state.err}/>}
-                    {this.state.modifyIn===1 && <SuccessMsg msg={this.state.msg}/>}
+                    {this.state.err && <ErrorMsg error={this.state.err}/>}
+                    {this.state.msg && <SuccessMsg msg={this.state.msg} setdata={this.setMsg}/>}
                     <form onSubmit={this.handleSubmit}>
                         <input type="text" 
                         defaultValue={this.state.name}

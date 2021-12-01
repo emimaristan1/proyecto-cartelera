@@ -19,6 +19,8 @@ export class NewUser extends Component{
         this.changePassword = this.changePassword.bind(this)
     }
 
+    setMsg = data =>{this.setState({msg: data})}
+
     changeName(event){
         this.setState({
             name:event.target.value
@@ -61,7 +63,7 @@ export class NewUser extends Component{
                     <h2>Nuevo usuario</h2>
                     <br />
                     {this.state.errorMsg && <ErrorMsg error={this.state.errorMsg} />}
-                    {this.state.msg && <SuccessMsg msg={this.state.msg} />}
+                    {this.state.msg && <SuccessMsg msg={this.state.msg} setdata={this.setMsg}/>}
                     <form onSubmit={this.onSubmit}>
                         <input type="text" 
                         placeholder="Nombre"

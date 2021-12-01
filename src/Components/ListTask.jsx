@@ -4,7 +4,7 @@ import React from 'react'
 export default function ListTask(props) {
     return (
         <div>
-            { props.tasks.map((task, key) => (
+            { props.tasks && props.tasks.map((task, key) => (
                     <div key={key} className="alert alert-secondary" style={{margin: "10px", maxWidth: "300px", float: "left", minWidth: "250px"}}>
                         <h5>{task.titulo}</h5>
                         <p className="alert-heading fs-6">{task.descripcion}</p>

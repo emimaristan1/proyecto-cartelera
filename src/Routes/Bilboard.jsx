@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import { Card, ListGroup, Button, Modal, Nav ,Alert } from 'react-bootstrap';
 import { withRouter } from "react-router";
 import ListTask from '../Components/ListTask';
+import SuccessMsg from '../Components/SuccessMsg';
+import ErrorMsg from '../Components/ErrorMsg';
 
 export class Bilboard extends Component {
     constructor(props){
@@ -25,7 +27,34 @@ export class Bilboard extends Component {
         this.setMsg = this.setMsg.bind(this)
     }
 
+    handleClose = () => this.setModalShow(false)
+    handleShow = () => this.setModalShow(true)
+
     showModal(value){this.setState({modalShow: value})}
+    setModalShow(state){this.setState({showmodal: state})}
+    addTask = () =>{ this.setState({ tasks: this.state.tasks.concat([this.state.task])})}//agrega al array this.state.tasks el this.state.task cargado
+    setMsg = data =>{this.setState({msg: data})}
+    onChangeTask(tsk){ //carga this.state.task con tsk
+        this.setState({task: tsk})  //asigna a this.state.task la id de la task en tsk
+    };
+
+    addMember = () =>{  //agrega al array this.state.members el this.state.member cargado
+        this.setState(state => { 
+            const members = state.members.concat(this.state.member.email);
+            return {
+                members,
+                member:''
+            }
+        })
+    };
+
+    removeTask = (e) => {
+        this.setState({
+            tasks: this.state.tasks.filter(function(task){
+                return task._id !== e 
+            })
+        });
+    }
 
     completeTask = (id) =>{
         const created = {
@@ -61,8 +90,10 @@ export class Bilboard extends Component {
             axios.post('/bilboards/addtask', created1)
             .then(res => {
                 this.setMsg(res.data)
+                this.onChangeTask(response.data)
+                this.addTask()
             }).catch(error => {
-                alert(error.message)
+                this.setState({errorMsg: error.message})
             });
         }).catch(err => {
             this.setState({errorMsg: err.message})
@@ -70,14 +101,6 @@ export class Bilboard extends Component {
         
         /* this.handleClose(); */
     };
-
-    handleClose = () => this.setModalShow(false)
-
-    setModalShow(state){
-        this.setState({showmodal: state});
-    }
-    
-    handleShow = () => this.setModalShow(true);
 
     componentDidMount(){    //al cargar los elementos
         axios.get('/bilboards/' + this.state.bilboardId).then(res=>{ //trae del backend el bilboard segun su id
@@ -114,33 +137,6 @@ export class Bilboard extends Component {
         return false
     }
 
-    addTask = () =>{  //agrega al array this.state.tasks el this.state.task cargado
-        this.setState({ 
-            tasks: this.state.tasks.concat([this.state.task])
-        })
-    };
-
-    removeTask = (e) => {
-        this.setState({
-            tasks: this.state.tasks.filter(function(task){
-                return task._id !== e 
-            })
-        });
-    }
-
-    onChangeTask(tsk){ //carga this.state.task con tsk
-        this.setState({task: tsk})  //asigna a this.state.task la id de la task en tsk
-    };
-
-    addMember = () =>{  //agrega al array this.state.members el this.state.member cargado
-        this.setState(state => { 
-            const members = state.members.concat(this.state.member.email);
-            return {
-                members,
-                member:''
-            }
-        })
-    };
 
     onChangeMember(mem){ //carga this.state.member con mem
         this.setState({member: mem})  //asigna a this.state.member la id de usuario en mem
@@ -169,13 +165,12 @@ export class Bilboard extends Component {
         });
     }
 
-    setMsg = data =>{this.setState({msg: data})}
-
     render() {
+        {this.state.tasks.length>0 && console.log(this.state.tasks)}
         return this.state.bilboard ? (
             <>
-                {this.state.msg && <Message data={this.state.msg} setdata={this.setMsg}/>}
-                {this.state.errorMsg && <ErrorMessage error={this.state.errorMsg} />}
+                {this.state.msg && <SuccessMsg msg={this.state.msg} setdata={this.setMsg}/>}
+                {this.state.errorMsg && <ErrorMsg error={this.state.errorMsg} />}
                 <Card>
                     <Card.Header as="h2">
                         {this.state.bilboard.projectName}
@@ -204,7 +199,6 @@ export class Bilboard extends Component {
                         ))}
                     </div> */}
                         <ListTask tasks={this.state.tasks} completeTask={this.completeTask}/>
-                    
                 </Card>
                 {
                     this.state.members.length!==0 && 
@@ -257,7 +251,7 @@ export class Bilboard extends Component {
                         </Modal.Body>
                         <Modal.Footer>
                             <Button className="btn btn-danger" onClick={this.handleClose}>Cerrar</Button>
-                            <Button type="submit" className="btn btn-success">Crear</Button>
+                            <Button type="submit" className="btn btn-success" onClick={this.handleClose}>Crear</Button>
                         </Modal.Footer>
                     </form>
                 </Modal>
@@ -274,21 +268,4 @@ export class Bilboard extends Component {
     }
 }
 
-function Message(props){
-    return(
-        <Alert variant='success' onClose={() => props.setdata('')} dismissible>
-            {props.data}
-        </Alert>
-    )
-}
-
-function ErrorMessage(props){
-    return(
-        <Alert variant='danger'>
-            {props.error}
-        </Alert>
-    )
-}
-
 export default withRouter(Bilboard)
-
