@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component } from 'react'
 import { Card, ListGroup, Button, Modal, Nav ,Alert } from 'react-bootstrap';
 import { withRouter } from "react-router";
+import ListTask from '../Components/ListTask';
 
 export class Bilboard extends Component {
     constructor(props){
@@ -21,24 +22,54 @@ export class Bilboard extends Component {
         }
 
         this.showModal = this.showModal.bind(this)
+        this.setMsg = this.setMsg.bind(this)
     }
 
-    showModal(value){
-        this.setState({
-            modalShow: value
-        })
-    }
+    showModal(value){this.setState({modalShow: value})}
 
-    completeTask(id){
+    completeTask = (id) =>{
         const created = {
             idBilboard: this.state.bilboard._id,
             idTask: id
         };
 
-        axios.post('/bilboards/deletetask', created).then(res => alert(res.data)).catch(error => {alert(error.message)});
+        axios.post('/bilboards/deletetask', created)
+        .then(res => {
+            this.setMsg(res.data)
+            this.removeTask(id)
+        },err => {
+            this.setState({errorMsg: err.response.data})
+        });
         //     axios.post('/tasks/delete', created1).then(res => alert(res.data)).catch(error => {alert(error.message)})
-        window.location.href = window.location.href;
+        /* window.location.href = window.location.href; */
     }
+
+    createTask = (e) =>{ 
+        e.preventDefault();
+        const titulo1 = document.getElementById("titulo");
+        const descripcion1 = document.getElementById("descripcion");
+        const created = {
+            titulo: titulo1.value,
+            descripcion: descripcion1.value
+        }
+
+        axios.post('/tasks/new', created).then(response => {
+            const created1 = {
+                idBilboard: this.state.bilboardId,
+                idTask: response.data._id
+            };
+            axios.post('/bilboards/addtask', created1)
+            .then(res => {
+                this.setMsg(res.data)
+            }).catch(error => {
+                alert(error.message)
+            });
+        }).catch(err => {
+            this.setState({errorMsg: err.message})
+        });
+        
+        /* this.handleClose(); */
+    };
 
     handleClose = () => this.setModalShow(false)
 
@@ -65,18 +96,37 @@ export class Bilboard extends Component {
                 .then(task => {
                     this.onChangeTask(task.data)
                     this.addTask()
-                })
+                },err => {
+                    this.setState({errorMsg: err.response.data})
+                });
+            },err => {
+                this.setState({errorMsg: err.response.data})
             });
             this.setState({bilboard: bilboard})
         });
         
     }
     
+    shouldComponentUpdate(tasks){
+        if(tasks !== this.state.tasks)
+            return true
+        
+        return false
+    }
+
     addTask = () =>{  //agrega al array this.state.tasks el this.state.task cargado
         this.setState({ 
             tasks: this.state.tasks.concat([this.state.task])
         })
     };
+
+    removeTask = (e) => {
+        this.setState({
+            tasks: this.state.tasks.filter(function(task){
+                return task._id !== e 
+            })
+        });
+    }
 
     onChangeTask(tsk){ //carga this.state.task con tsk
         this.setState({task: tsk})  //asigna a this.state.task la id de la task en tsk
@@ -111,7 +161,7 @@ export class Bilboard extends Component {
             axios.delete('/invitation/delete', {idBilboard: this.state.bilboardId}, head)
 
             //redirige al inicio
-           /*  setTimeout(() => {  
+            /*  setTimeout(() => {  
                 window.location.replace('/');
             }, 3000); */
         }, error => {
@@ -144,15 +194,17 @@ export class Bilboard extends Component {
                         </button>
                     </Card.Header>
 
-                    <div className="d-flex flex-wrap justify-content-center">
-                    { this.state.tasks.map((task, key) => (
-                        <div key={key} className="alert alert-secondary" style={{margin: "10px", maxWidth: "300px", float: "left", minWidth: "250px"}}>
-                            <h5>{task.titulo}</h5>
-                            <p className="alert-heading fs-6">{task.descripcion}</p>
-                            <Button onClick={ ()=> this.completeTask(task._id)} style={{float: "right", marginLeft: '5px'}} className="btn btn-success btn-sm">Completar</Button>
-                        </div>
-                    ))}
-                    </div>
+                    {/* <div className="d-flex flex-wrap justify-content-center">
+                        { this.state.tasks.map((task, key) => (
+                            <div key={key} className="alert alert-secondary" style={{margin: "10px", maxWidth: "300px", float: "left", minWidth: "250px"}}>
+                                <h5>{task.titulo}</h5>
+                                <p className="alert-heading fs-6">{task.descripcion}</p>
+                                <Button onClick={ ()=> this.completeTask(task._id)} style={{float: "right", marginLeft: '5px'}} className="btn btn-success btn-sm">Completar</Button>
+                            </div>
+                        ))}
+                    </div> */}
+                        <ListTask tasks={this.state.tasks} completeTask={this.completeTask}/>
+                    
                 </Card>
                 {
                     this.state.members.length!==0 && 
@@ -187,7 +239,7 @@ export class Bilboard extends Component {
                         </Modal.Header>
                         <Modal.Body>
                             <div className="mb-3">
-                                <label for="titulo" class="form-label">Titulo</label>
+                                <label for="titulo" className="form-label">Titulo</label>
                                 <input type="text" 
                                 id="titulo"
                                 placeholder="Ingrese el titulo de la tarea"
@@ -195,7 +247,7 @@ export class Bilboard extends Component {
                                 />
                             </div>
                             <div className="mb-3">
-                                <label for="descripcion" class="form-label">Descripcion</label>
+                                <label for="descripcion" className="form-label">Descripcion</label>
                                 <input type="text" 
                                 id="descripcion"
                                 placeholder="Ingrese la descripcion"

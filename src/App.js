@@ -26,7 +26,6 @@ class App extends Component {
         super(props)
         this.state={
             user:'',
-            loggedIn:false,
             invitations: [],
             modalShow:false
         }
@@ -46,30 +45,27 @@ class App extends Component {
             axios.get('/users/me', config) 
             .then(res => {
                 this.setUser(res.data); //setea el estado de usuario
-                this.setState({loggedIn: true}) //setea el estado de loggedIn
             },err => {
                 console.log(err);
             })
             
-            axios.get('/invitation/my', config)
-            .then(res => this.setInvitation(res.data)
-            ,err => {
-                console.log(err);
-            });
+            if(!this.state.invitations){
+                axios.get('/invitation/my', config)
+                .then(res => {
+                        this.setInvitation(res.data)
+                        console.log(res.data);
+                },err => {
+                    console.log(err);
+                });
+            }
         }
     }
 
-    setUser = user =>{
-        this.setState({user: user})
-    }
+    setUser = user =>{this.setState({user: user})}
 
-    setInvitation = inv =>{
-        this.setState({invitations: inv});
-    }
+    setInvitation = inv =>{this.setState({invitations: inv});}
 
-    showModal = value =>{
-        this.setState({modalShow: value})
-    }
+    showModal = value =>{this.setState({modalShow: value})}
     
     render(){
 
@@ -86,18 +82,18 @@ class App extends Component {
                     <div className="container-lg Inicio">
                         <br />
                         <Switch>
-                            <Route index exact path="/" component={() => <Inicio user={this.state.user} isLoggedIn={this.state.loggedIn}/>}/>
+                            <Route index exact path="/" component={() => <Inicio user={this.state.user} />}/>
 
-                            <Route exact path="/users/newUser" render={() => (!this.state.loggedIn ? (<NewUser />) : (<Inicio />))} />
-                            <Route exact path="/users/login" render={() => (!this.state.loggedIn ? (<Login setUser={this.setUser} setInvitation={this.setInvitation}/>) : (<Inicio />))} />
-                            <Route exact path="/users/perfil" render={() => (this.state.loggedIn ? (<Perfil user={this.state.user} />) : (<Inicio />))}/>
-                            <Route exact path="/users/edit" render={() => (this.state.loggedIn ? (<EditUser user={this.state.user} setUser={this.setUser}/>) : (<Inicio />))} />
+                            <Route exact path="/users/newUser" render={() => (!this.state.user ? (<NewUser />) : (<Inicio />))} />
+                            <Route exact path="/users/login" render={() => (!this.state.user ? (<Login setUser={this.setUser} setInvitation={this.setInvitation}/>) : (<Inicio />))} />
+                            <Route exact path="/users/perfil" render={() => (this.state.user ? (<Perfil user={this.state.user} />) : (<Inicio />))}/>
+                            <Route exact path="/users/edit" render={() => (this.state.user ? (<EditUser user={this.state.user} setUser={this.setUser}/>) : (<Inicio />))} />
                             <Route exact path="/users/list"><ListUsers /></Route>
 
-                            <Route exact path="/bilboard/new" render={() => (this.state.loggedIn ? (<NewBilboard user={this.state.user}/>): (<Inicio />))}/>
+                            <Route exact path="/bilboard/new" render={() => (this.state.user ? (<NewBilboard user={this.state.user}/>): (<Inicio />))}/>
                             <Route exact path="/bilboard/list" user={this.state.user}><ListBilboard/></Route>
-                            <Route path="/bilboard/:bilboardId/addmembers" render={() => (this.state.loggedIn ? (<AddMember user={this.state.user}/>): (<Inicio />))}/>
-                            <Route path="/bilboard/:bilboardId" render={() => (this.state.loggedIn ? (<Bilboard user={this.state.user}/>): (<Inicio />))}/>
+                            <Route path="/bilboard/:bilboardId/addmembers" render={() => (this.state.user ? (<AddMember user={this.state.user}/>): (<Inicio />))}/>
+                            <Route path="/bilboard/:bilboardId" render={() => (this.state.user ? (<Bilboard user={this.state.user}/>): (<Inicio />))}/>
                             
                             <Route exact path="/desarrolladores" component={()=> <About client={false}/>}/>
                             <Route exact path="/clientes" component={()=> <About client={true}/>}/>

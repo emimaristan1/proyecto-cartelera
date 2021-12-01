@@ -8,7 +8,6 @@ class Inicio extends Component {
         super(props)
         this.state={
             user: this.props.user,
-            isLoggedIn: props.isLoggedIn,
             bilboad:'',
             listbilboads:[]
         }
@@ -17,7 +16,7 @@ class Inicio extends Component {
     render() {
         return (
             <>
-                {this.state.isLoggedIn? <UserGreeting user={this.state.user} blibloards={this.state.listbilboads}/> : <GuestGreeting />}
+                {this.state.user? <UserGreeting user={this.state.user} blibloards={this.state.listbilboads}/> : <GuestGreeting />}
             </>
         )
     }
