@@ -1,76 +1,30 @@
 import { Component } from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from 'axios'
+import { Nav } from 'react-bootstrap';
 
 class Perfil extends Component {
     constructor(props){
         super(props)
-        this.state = {
-            name:'',
-            email:''
+        this.state={
+            user: this.props.user
         }
-        this.changeName = this.changeName.bind(this)
-        this.changeEmail = this.changeEmail.bind(this)
     }
 
-    changeName(event){
-        this.setState({
-            name:event.target.value
-        })
-    }
-    changeEmail(event){
-        this.setState({
-            email:event.target.value
-        })
-    }
-
-    onSubmit = (event) =>{
-        event.preventDefault()
-
-        const modify = {
-            name:this.state.name,
-            email:this.props.user.email,
-            newemail:this.state.email,
-        }
-
-        axios.post('/users/modify', modify)
-        .then(response => alert(response.data))
-    };
-
-
-    render() {    
-        let info;
-        if(this.props.user){
-            info = (
-                <div>
-                    <div className="form-group">
-                        <form onSubmit={this.onSubmit}>
-                            <input type="text" 
-                            placeholder={this.props.user.name} 
-                            onChange={this.changeName} 
-                            className="form-control form-group"  
-                            />
-                            <input type="email" 
-                            placeholder={this.props.user.email} 
-                            onChange={this.changeEmail} 
-                            className="form-control form-group"  
-                            />
-                            <input type="submit"
-                            className="btn btn-danger btn-block"
-                            value='Modificar'
-                            />
-                        </form>
-                    </div>
-                </div>
-            )
-        }else{
-            info = (
-                <h3>Tu no deberias estar aqui</h3>
-            )
-        }
-        
+    render() {
         return (
-            <div>{info}
+            <div>
+                {
+                    !this.state.user ? 'Cargando...' : 
+                    <>
+                        <h3>hi {this.state.user.name}</h3>
+                        <p>{this.state.user.email}</p>
+                        <Nav variant="pills" defaultActiveKey="/users/edit">
+                            <Nav.Item>
+                                <Nav.Link href="/users/edit">Editar Perfil</Nav.Link>
+                            </Nav.Item>
+                        </Nav>
+                    </>
+                }
+                
             </div>
         )
         

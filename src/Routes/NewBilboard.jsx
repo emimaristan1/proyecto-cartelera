@@ -1,13 +1,19 @@
 import React, { Component } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Form } from 'react-bootstrap';
 import axios from 'axios'
+import ErrorMsg from '../Components/ErrorMsg';
+import SuccessMsg from '../Components/SuccessMsg';
 
 export class NewBilboard extends Component{
     constructor(props){
         super(props)
         this.state = {
+            userLogged: this.props.user,
             projectName:'',
-            description:''
+            description:'',
+            msg:'',
+            err:'',
         }
         this.changeProjectName = this.changeProjectName.bind(this)
         this.changeDescription = this.changeDescription.bind(this)
@@ -29,40 +35,52 @@ export class NewBilboard extends Component{
 
         const created = {
             projectName:this.state.projectName,
-            adminEmail:this.props.user.email,
+            adminId:this.state.userLogged._id,
+            adminEmail: this.state.userLogged.email,
             description:this.state.description
         }
 
         axios.post('/bilboards/new', created)
-        .then(response => alert(response.data))
-
-        this.setState({
-            projectName:'',
-            description:''
+        .then(response => {
+            this.setState({msg: response.data, err: ''});
+        }, error => {
+            this.setState({err: error.response.data, msg: ''})
         })
+        .catch(function (error) {alert(error.message)})
+
+        this.setState({projectName:'',description:''})
     };
+
+    setMsg = data =>{this.setState({msg: data})}
     
     render(){
         return (
-            <div className="container">
-                <h2>Nueva cartelera</h2>
-                <div className="form-group">
+            <div className="container d-flex justify-content-center">
+                <div className="form-group w-75 p-3">
+                    <h2>Nueva cartelera</h2>
+                    <br />
+                    {this.state.err && <ErrorMsg error={this.state.err}/>}
+                    {this.state.msg && <SuccessMsg msg={this.state.msg} setdata={this.setMsg}/>}
                     <form onSubmit={this.onSubmit}>
                         <input type="text" 
-                        placeholder="Nombre de la cartelera"
-                        onChange={this.changeProjectName} 
-                        value={this.state.projectName} 
-                        className="form-control form-group"  
+                            placeholder="Nombre de la cartelera"
+                            onChange={this.changeProjectName} 
+                            value={this.state.projectName} 
+                            className="form-control form-group"  
                         />
-                        <input type="text" 
-                        placeholder="Descripción"
-                        onChange={this.changeDescription} 
-                        value={this.state.description} 
-                        className="form-control form-group"  
+                        <br />
+                        <Form.Control 
+                            as="textarea" 
+                            rows={3} 
+                            placeholder="Descripción"
+                            value={this.state.description} 
+                            onChange={this.changeDescription} 
+                            className="form-control form-group"
                         />
+                        <br />
                         <input type="submit"
-                        className="btn btn-success btn-block"
-                        value='Crear'
+                            className="btn btn-success btn-block"
+                            value='Crear'
                         />
                     </form>
                 </div>
